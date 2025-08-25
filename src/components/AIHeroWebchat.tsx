@@ -1,31 +1,44 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { ChipRow } from "./ChipRow";
+import avatarBusinessman from "@/assets/avatar-businessman.jpg";
+import avatarCraftsman from "@/assets/avatar-craftsman.jpg";
+import avatarFactory from "@/assets/avatar-factory.jpg";
+import avatarShop from "@/assets/avatar-shop.jpg";
 
 const chipData = [
   // Row 1 (slides right)
   [
-    { text: "Where do we make our products", variant: "light" as const },
-    { text: "How did we start?", variant: "dark" as const },
-    { text: "Our latest products…", variant: "light" as const },
-    { text: "Our shops..", variant: "dark" as const },
-    { text: "How are our products made…", variant: "light" as const },
+    { text: "Where do we make our products", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "How did we start?", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "Our latest products…", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Our shops..", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "How are our products made…", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Most premium…", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "Where to find us", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "Our history…", variant: "dark" as const, avatarSrc: avatarBusinessman },
   ],
   // Row 2 (slides left)
   [
-    { text: "Most premium…", variant: "dark" as const },
-    { text: "Where to find us", variant: "light" as const },
-    { text: "Our history…", variant: "dark" as const },
-    { text: "Where do we make our products", variant: "light" as const },
-    { text: "How did we start?", variant: "dark" as const },
+    { text: "Most premium…", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "Where to find us", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "Our history…", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "Where do we make our products", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "How did we start?", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "Our latest products…", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Our shops..", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "How are our products made…", variant: "light" as const, avatarSrc: avatarCraftsman },
   ],
   // Row 3 (slides right)
   [
-    { text: "Our shops..", variant: "light" as const },
-    { text: "How are our products made…", variant: "dark" as const },
-    { text: "Most premium…", variant: "light" as const },
-    { text: "Where to find us", variant: "dark" as const },
-    { text: "Our history…", variant: "light" as const },
+    { text: "Our shops..", variant: "light" as const, avatarSrc: avatarShop },
+    { text: "How are our products made…", variant: "dark" as const, avatarSrc: avatarCraftsman },
+    { text: "Most premium…", variant: "light" as const, avatarSrc: avatarShop },
+    { text: "Where to find us", variant: "dark" as const, avatarSrc: avatarFactory },
+    { text: "Our history…", variant: "light" as const, avatarSrc: avatarBusinessman },
+    { text: "Where do we make our products", variant: "dark" as const, avatarSrc: avatarFactory },
+    { text: "How did we start?", variant: "light" as const, avatarSrc: avatarBusinessman },
+    { text: "Our latest products…", variant: "dark" as const, avatarSrc: avatarCraftsman },
   ],
 ];
 
