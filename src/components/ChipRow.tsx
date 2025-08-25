@@ -21,16 +21,19 @@ export const ChipRow = ({ chips, direction, speed, onChipClick }: ChipRowProps) 
         : "animate-slide-right-80"
       : "animate-slide-left-70";
 
-  // Triple the chips for seamless infinite loop without gaps
-  const tripledChips = [...chips, ...chips, ...chips];
+  // Create enough chips to ensure seamless loop without gaps
+  const repeatedChips = [...chips, ...chips, ...chips, ...chips, ...chips];
 
   return (
     <div className="relative overflow-hidden">
       <div 
-        className={`flex gap-4 w-[300%] ${animationClass} motion-reduce:animate-none hover:[animation-play-state:paused]`}
-        style={{ animationDuration: speed }}
+        className={`flex gap-4 ${animationClass} motion-reduce:animate-none hover:[animation-play-state:paused]`}
+        style={{ 
+          animationDuration: speed,
+          width: `${repeatedChips.length * 200}px` // Ensure enough width
+        }}
       >
-        {tripledChips.map((chip, index) => (
+        {repeatedChips.map((chip, index) => (
           <QuestionChip
             key={`${chip.text}-${index}`}
             text={chip.text}
