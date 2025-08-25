@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,63 +28,101 @@ const Answer = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [answerData, setAnswerData] = useState<AnswerData | null>({
-    text: "Based on our premium craftsmanship and decades of experience, our products are manufactured in our state-of-the-art facilities located in Switzerland and Germany. We maintain strict quality control standards throughout the entire production process, ensuring each piece meets our exceptional standards.",
-    products: [
-      {
-        id: "1",
-        title: "Premium Leather Wallet",
-        price: "$129.99",
-        image: productWallet,
-        link: "/products/wallet"
-      },
-      {
-        id: "2", 
-        title: "Artisan Watch Collection",
-        price: "$899.99",
-        image: productWatch,
-        link: "/products/watch"
-      },
-      {
-        id: "3",
-        title: "Handcrafted Belt",
-        price: "$79.99", 
-        image: productBelt,
-        link: "/products/belt"
-      },
-      {
-        id: "4",
-        title: "Luxury Travel Bag",
-        price: "$459.99",
-        image: productBag, 
-        link: "/products/bag"
-      }
-    ]
-  });
+  const [answerData, setAnswerData] = useState<AnswerData | null>(null);
+  const location = useLocation();
   const { toast } = useToast();
+
+  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/ecd5f122-250e-4db6-ab5a-98060c92d986";
+
+  // Default products to show
+  const defaultProducts = [
+    {
+      id: "1",
+      title: "Premium Leather Wallet",
+      price: "$129.99",
+      image: productWallet,
+      link: "/products/wallet"
+    },
+    {
+      id: "2", 
+      title: "Artisan Watch Collection",
+      price: "$899.99",
+      image: productWatch,
+      link: "/products/watch"
+    },
+    {
+      id: "3",
+      title: "Handcrafted Belt",
+      price: "$79.99", 
+      image: productBelt,
+      link: "/products/belt"
+    },
+    {
+      id: "4",
+      title: "Luxury Travel Bag",
+      price: "$459.99",
+      image: productBag, 
+      link: "/products/bag"
+    }
+  ];
+
+  // Check if we have data from navigation (from hero page)
+  useEffect(() => {
+    if (location.state?.response) {
+      const { question, response } = location.state;
+      console.log("Received from navigation:", { question, response });
+      
+      setAnswerData({
+        text: response.answer || response.text || response.message || "Respuesta recibida del asistente.",
+        products: response.products || defaultProducts
+      });
+    }
+  }, [location.state]);
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
     
     setIsLoading(true);
     setError(null);
+    console.log("Sending question to n8n:", inputValue);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Mock response
-      setAnswerData({
-        text: `Thank you for your question: "${inputValue}". Here's what I found based on our extensive product knowledge and customer feedback...`,
-        products: answerData?.products || []
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: inputValue,
+          timestamp: new Date().toISOString(),
+          source: "answer_page"
+        }),
       });
-      
-      setInputValue("");
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("n8n response:", result);
+        
+        setAnswerData({
+          text: result.answer || result.text || result.message || `Respuesta a: "${inputValue}"`,
+          products: result.products || defaultProducts
+        });
+        
+        setInputValue("");
+        
+        toast({
+          title: "Respuesta recibida",
+          description: "El asistente ha respondido tu pregunta.",
+        });
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
     } catch (err) {
-      setError("Sorry, I couldn't process your request. Please try again.");
+      console.error("Error calling n8n webhook:", err);
+      setError("No se pudo conectar con el asistente. Por favor, inténtalo de nuevo.");
       toast({
         title: "Error",
-        description: "Failed to get response. Please try again.",
+        description: "No se pudo obtener respuesta. Inténtalo de nuevo.",
         variant: "destructive"
       });
     } finally {

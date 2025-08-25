@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { ChipRow } from "./ChipRow";
+import { useToast } from "@/hooks/use-toast";
 import avatarBusinessman from "@/assets/avatar-businessman.jpg";
 import avatarCraftsman from "@/assets/avatar-craftsman.jpg";
 import avatarFactory from "@/assets/avatar-factory.jpg";
@@ -44,15 +46,72 @@ const chipData = [
 
 const AIHeroWebchat = () => {
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const askAssistant = (chipText: string) => {
-    setInputValue(chipText);
-    // Here you would implement the actual AI assistant functionality
-    console.log("Asking assistant:", chipText);
+  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/ecd5f122-250e-4db6-ab5a-98060c92d986";
+
+  const askAssistant = async (question: string) => {
+    if (!question.trim()) return;
+    
+    setIsLoading(true);
+    console.log("Sending question to n8n:", question);
+
+    try {
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: question,
+          timestamp: new Date().toISOString(),
+          source: "hero_webchat"
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("n8n response:", result);
+        
+        // Navigate to answer page with the response data
+        navigate("/answer", { 
+          state: { 
+            question: question,
+            response: result 
+          } 
+        });
+      } else {
+        throw new Error("Failed to get response");
+      }
+    } catch (error) {
+      console.error("Error calling n8n webhook:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo conectar con el asistente. Inténtalo de nuevo.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    askAssistant(inputValue);
   };
 
   const handleChipClick = (text: string) => {
+    setInputValue(text);
     askAssistant(text);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      askAssistant(inputValue);
+    }
   };
 
   return (
@@ -60,16 +119,23 @@ const AIHeroWebchat = () => {
       <div className="mx-auto max-w-[1200px] px-4 py-28">
         {/* Input - Left Aligned */}
         <div className="mb-12">
-          <div className="relative w-full max-w-2xl">
+          <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
             <Input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="How can I help?"
               aria-label="Ask our AI assistant a question"
-              className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              disabled={isLoading}
+              className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
             />
-          </div>
+            {isLoading && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+              </div>
+            )}
+          </form>
         </div>
 
         {/* Title - Left Aligned */}
