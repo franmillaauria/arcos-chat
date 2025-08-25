@@ -14,13 +14,13 @@ export const QuestionChip = ({
   onClick 
 }: QuestionChipProps) => {
   const sizeClasses = {
-    md: "min-h-[48px] px-6 text-base",
-    sm: "min-h-[36px] px-4 text-sm"
+    md: "h-[40px] px-6 text-base", // Smaller than 48px avatar
+    sm: "h-[32px] px-4 text-sm"   // Smaller than 40px avatar
   };
 
   const avatarSizes = {
-    md: "w-10 h-10",
-    sm: "w-8 h-8"
+    md: "w-12 h-12", // 48px - larger than pill
+    sm: "w-10 h-10"  // 40px - larger than pill
   };
 
   const variantClasses = {
@@ -45,11 +45,11 @@ export const QuestionChip = ({
         <span>{text}</span>
       </button>
       
-      {/* Avatar circle positioned outside the pill */}
+      {/* Avatar circle positioned next to the pill without overlap */}
       <div 
         className={`
           ${avatarSizes[size]} rounded-full border-2 border-white
-          bg-gray-300 flex-shrink-0 overflow-hidden -ml-2
+          bg-gray-300 flex-shrink-0 overflow-hidden ml-2
         `}
       >
         {avatarSrc ? (
