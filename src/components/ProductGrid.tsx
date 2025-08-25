@@ -2,8 +2,11 @@ interface Product {
   id: string;
   title: string;
   price: string;
+  oldPrice?: string;
   image: string;
   link: string;
+  brand?: string;
+  inStock?: boolean;
 }
 
 interface ProductGridProps {
@@ -16,51 +19,118 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="aspect-square bg-muted rounded-lg mb-3"></div>
-            <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-muted rounded w-1/2 mb-3"></div>
-            <div className="h-9 bg-muted rounded w-full"></div>
+          <div key={i} className="animate-pulse bg-white rounded-2xl p-4 md:p-5" style={{ boxShadow: '0 6px 20px rgba(0,0,0,0.06)' }}>
+            <div className="bg-[#F2F3F5] rounded-xl mb-3 md:mb-4" style={{ height: '200px' }}></div>
+            <div className="h-3 bg-[#F2F3F5] rounded w-2/3 mb-2"></div>
+            <div className="h-4 bg-[#F2F3F5] rounded w-full mb-2"></div>
+            <div className="h-4 bg-[#F2F3F5] rounded w-1/2 mb-4"></div>
+            <div className="h-11 bg-[#F2F3F5] rounded-full"></div>
+            <div className="h-3 bg-[#F2F3F5] rounded w-3/4 mt-3"></div>
           </div>
         ))}
       </div>
     );
   }
 
+  const handleAddToCart = (e: React.MouseEvent, productId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Add to cart logic here
+    console.log('Adding to cart:', productId);
+  };
+
+  const formatPrice = (price: string, locale = 'es-ES', currency = 'EUR') => {
+    const numericPrice = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+    }).format(numericPrice);
+  };
+
+  const calculateDiscount = (price: string, oldPrice: string) => {
+    const current = parseFloat(price.replace(/[^\d.,]/g, '').replace(',', '.'));
+    const old = parseFloat(oldPrice.replace(/[^\d.,]/g, '').replace(',', '.'));
+    return Math.round(((old - current) / old) * 100);
+  };
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
       {products.map((product) => (
-        <div 
+        <a
           key={product.id}
-          className="group border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200"
+          href={product.link}
+          className="group bg-white rounded-2xl p-4 md:p-5 cursor-pointer transition-all duration-200 hover:scale-[1.01] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-opacity-24"
+          style={{ 
+            boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
+            transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.12)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.06)';
+          }}
         >
-          {/* Square Image */}
-          <div className="aspect-square overflow-hidden bg-muted">
+          {/* Product Image */}
+          <div 
+            className="bg-[#F2F3F5] rounded-xl mb-3 md:mb-4 flex items-center justify-center overflow-hidden"
+            style={{ height: '200px' }}
+          >
             <img
               src={product.image}
-              alt={product.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+              alt={`${product.title} - ${product.brand || 'Product'} image`}
+              className="w-full h-full object-contain"
               loading="lazy"
             />
           </div>
           
           {/* Product Info */}
-          <div className="p-4">
-            <h3 className="font-medium text-base leading-tight mb-2 line-clamp-2 text-foreground">
+          <div className="space-y-2">
+            {/* Brand */}
+            {product.brand && (
+              <p className="text-[#9AA0A6] text-sm font-semibold uppercase tracking-wide">
+                {product.brand}
+              </p>
+            )}
+            
+            {/* Title */}
+            <h3 className="text-[#0B0B0B] text-[17px] md:text-[18px] font-bold leading-tight line-clamp-2">
               {product.title}
             </h3>
-            <p className="text-lg font-semibold text-foreground mb-3">
-              {product.price}
-            </p>
-            <a
-              href={product.link}
-              className="inline-flex items-center justify-center w-full h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-              aria-label={`Ver más detalles de ${product.title}`}
+            
+            {/* Price */}
+            <div className="flex items-center gap-2">
+              <span className="text-[#0B0B0B] text-[16px] md:text-[17px] font-semibold">
+                {formatPrice(product.price)}
+              </span>
+              {product.oldPrice && (
+                <>
+                  <span className="text-[#9AA0A6] text-sm line-through">
+                    {formatPrice(product.oldPrice)}
+                  </span>
+                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-md font-semibold">
+                    -{calculateDiscount(product.price, product.oldPrice)}%
+                  </span>
+                </>
+              )}
+            </div>
+            
+            {/* Add to Cart Button */}
+            <button
+              onClick={(e) => handleAddToCart(e, product.id)}
+              disabled={product.inStock === false}
+              className="w-full h-11 md:h-12 bg-[#0B0B0B] text-white font-semibold rounded-full transition-all duration-200 hover:bg-[#2B2B2B] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-opacity-24"
+              aria-label={`Agregar ${product.title} al carrito`}
             >
-              Ver más detalles
-            </a>
+              {product.inStock === false ? 'Agotado' : 'Agregar al carrito'}
+            </button>
+            
+            {/* Shipping Info */}
+            <p className="text-[#6B7280] text-sm text-center">
+              Envío en un plazo de 3 a 5 días
+            </p>
           </div>
-        </div>
+        </a>
       ))}
     </div>
   );
