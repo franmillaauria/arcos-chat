@@ -92,13 +92,13 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             </p>
             
             {/* Title */}
-            <h3 className="text-[#0B0B0B] text-[17px] md:text-[18px] font-bold leading-tight line-clamp-2">
+            <h3 className="text-foreground text-[17px] md:text-[18px] font-bold leading-tight line-clamp-2">
               {product.title}
             </h3>
             
             {/* Price */}
             <div className="flex items-center gap-2">
-              <span className="text-[#0B0B0B] text-[16px] md:text-[17px] font-normal">
+              <span className="text-foreground text-[16px] md:text-[17px] font-normal">
                 {formatPrice(product.price)}
               </span>
               {product.oldPrice && (
@@ -117,7 +117,7 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             <button
               onClick={(e) => handleAddToCart(e, product.id)}
               disabled={product.inStock === false}
-              className="w-full h-11 md:h-12 bg-[#0B0B0B] text-white font-semibold rounded-full transition-all duration-200 hover:bg-[#2B2B2B] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111] focus-visible:ring-opacity-24"
+              className="w-full h-11 md:h-12 bg-foreground text-background font-semibold rounded-full transition-all duration-200 hover:bg-foreground/90 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-opacity-24"
               aria-label={`Agregar ${product.title} al carrito`}
             >
               {product.inStock === false ? 'Agotado' : 'Agregar al carrito'}

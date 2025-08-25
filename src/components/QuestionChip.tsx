@@ -24,8 +24,8 @@ export const QuestionChip = ({
   };
 
   const variantClasses = {
-    light: "bg-[#ECEEE8] text-[#111111]",
-    dark: "bg-[#0B0B0B] text-[#FFFFFF]"
+    light: "bg-[#ECEEE8] text-foreground",
+    dark: "bg-foreground text-background"
   };
 
   return (
