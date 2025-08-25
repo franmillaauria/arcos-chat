@@ -85,9 +85,9 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           </div>
           
           {/* Product Info */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             {/* Brand */}
-            <p className="text-[#9AA0A6] text-sm font-light capitalize">
+            <p className="text-[#9AA0A6] text-base font-light capitalize">
               {(product.brand || 'Riviera blanc').toLowerCase()}
             </p>
             
