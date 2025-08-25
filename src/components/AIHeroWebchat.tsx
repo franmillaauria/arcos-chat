@@ -45,8 +45,8 @@ const AIHeroWebchat = () => {
   return (
     <section className="min-h-screen bg-hero-bg">
       <div className="mx-auto max-w-[1200px] px-4 py-28">
-        {/* Input */}
-        <div className="mb-12 flex justify-center">
+        {/* Input - Left Aligned */}
+        <div className="mb-12">
           <div className="relative w-full max-w-2xl">
             <Input
               type="text"
@@ -59,8 +59,8 @@ const AIHeroWebchat = () => {
           </div>
         </div>
 
-        {/* Title */}
-        <div className="mb-16 text-center">
+        {/* Title - Left Aligned */}
+        <div className="mb-16">
           <h1 className="font-bold text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
             ASK ME ANYTHING ABOUT OUR
             <br />

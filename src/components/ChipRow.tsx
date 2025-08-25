@@ -1,6 +1,9 @@
+import { QuestionChip } from "./QuestionChip";
+
 interface Chip {
   text: string;
   variant: "light" | "dark";
+  avatarSrc?: string;
 }
 
 interface ChipRowProps {
@@ -18,48 +21,26 @@ export const ChipRow = ({ chips, direction, speed, onChipClick }: ChipRowProps) 
         : "animate-slide-right-54"
       : "animate-slide-left-46";
 
-  // Double the chips for seamless loop
-  const doubledChips = [...chips, ...chips];
+  // Triple the chips for seamless infinite loop without gaps
+  const tripledChips = [...chips, ...chips, ...chips];
 
   return (
     <div className="relative overflow-hidden">
       <div 
-        className={`flex gap-4 w-[200%] ${animationClass} motion-reduce:animate-none hover:[animation-play-state:paused]`}
+        className={`flex gap-4 w-[300%] ${animationClass} motion-reduce:animate-none hover:[animation-play-state:paused]`}
         style={{ animationDuration: speed }}
       >
-        {doubledChips.map((chip, index) => (
-          <ChipButton
+        {tripledChips.map((chip, index) => (
+          <QuestionChip
             key={`${chip.text}-${index}`}
             text={chip.text}
             variant={chip.variant}
+            size="md"
+            avatarSrc={chip.avatarSrc}
             onClick={() => onChipClick(chip.text)}
           />
         ))}
       </div>
     </div>
-  );
-};
-
-interface ChipButtonProps {
-  text: string;
-  variant: "light" | "dark";
-  onClick: () => void;
-}
-
-const ChipButton = ({ text, variant, onClick }: ChipButtonProps) => {
-  const baseClasses = "inline-flex items-center gap-3 rounded-full px-6 py-3 text-sm font-medium transition-all duration-200 hover:scale-105 cursor-pointer whitespace-nowrap";
-  const variantClasses = variant === "light" 
-    ? "bg-hero-chip-light-bg text-hero-chip-light-text" 
-    : "bg-hero-chip-dark-bg text-hero-chip-dark-text";
-
-  return (
-    <button
-      className={`${baseClasses} ${variantClasses}`}
-      onClick={onClick}
-      type="button"
-    >
-      <span className="text-sm md:text-base">{text}</span>
-      <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex-shrink-0"></div>
-    </button>
   );
 };
