@@ -7,6 +7,10 @@ import avatarBusinessman from "@/assets/avatar-businessman.jpg";
 import avatarCraftsman from "@/assets/avatar-craftsman.jpg";
 import avatarFactory from "@/assets/avatar-factory.jpg";
 import avatarShop from "@/assets/avatar-shop.jpg";
+import knifeChef from "@/assets/knife-chef.jpg";
+import knifeSet from "@/assets/knife-set.jpg";
+import knifeSantoku from "@/assets/knife-santoku.jpg";
+import knifeBoning from "@/assets/knife-boning.jpg";
 
 const chipData = [
   // Row 1 (slides right)
@@ -56,37 +60,70 @@ const AIHeroWebchat = () => {
     if (!question.trim()) return;
     
     setIsLoading(true);
-    console.log("Sending question to n8n:", question);
+    console.log("Sending question:", question);
 
     try {
-      const response = await fetch(N8N_WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      // Demo response for testing
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const demoResponse = {
+        answer: "Claro, aquí tienes los cuchillos por los que me preguntabas",
+        products: [
+          {
+            id: "1",
+            title: "Cuchillo Chef Premium",
+            price: "$199.99",
+            image: knifeChef,
+            link: "/products/chef-knife"
+          },
+          {
+            id: "2", 
+            title: "Set Cuchillos Profesional",
+            price: "$299.99",
+            image: knifeSet,
+            link: "/products/knife-set"
+          },
+          {
+            id: "3",
+            title: "Cuchillo Santoku",
+            price: "$149.99", 
+            image: knifeSantoku,
+            link: "/products/santoku-knife"
+          },
+          {
+            id: "4",
+            title: "Cuchillo Deshuesador",
+            price: "$89.99",
+            image: knifeBoning,
+            link: "/products/boning-knife"
+          },
+          {
+            id: "5",
+            title: "Cuchillo de Pan",
+            price: "$79.99",
+            image: knifeChef,
+            link: "/products/bread-knife"
+          },
+          {
+            id: "6",
+            title: "Cuchillo Paring",
+            price: "$59.99",
+            image: knifeSantoku,
+            link: "/products/paring-knife"
+          }
+        ]
+      };
+      
+      // Navigate to answer page with the demo response
+      navigate("/answer", { 
+        state: { 
           question: question,
-          timestamp: new Date().toISOString(),
-          source: "hero_webchat"
-        }),
+          response: demoResponse 
+        } 
       });
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log("n8n response:", result);
-        
-        // Navigate to answer page with the response data
-        navigate("/answer", { 
-          state: { 
-            question: question,
-            response: result 
-          } 
-        });
-      } else {
-        throw new Error("Failed to get response");
-      }
+      
     } catch (error) {
-      console.error("Error calling n8n webhook:", error);
+      console.error("Error:", error);
       toast({
         title: "Error",
         description: "No se pudo conectar con el asistente. Inténtalo de nuevo.",
@@ -148,30 +185,28 @@ const AIHeroWebchat = () => {
         </div>
       </div>
 
-      {/* White background section for chip rows */}
+      {/* White background section for chip rows - Full width */}
       <div className="bg-white">
-        <div className="mx-auto max-w-[1200px]">
-          {/* Chip Rows */}
-          <div className="space-y-6 overflow-hidden py-12">
-            <ChipRow
-              chips={chipData[0]}
-              direction="right"
-              speed="60s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[1]}
-              direction="left"
-              speed="70s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[2]}
-              direction="right"
-              speed="80s"
-              onChipClick={handleChipClick}
-            />
-          </div>
+        {/* Chip Rows - Full screen width */}
+        <div className="space-y-6 overflow-hidden py-12">
+          <ChipRow
+            chips={chipData[0]}
+            direction="right"
+            speed="60s"
+            onChipClick={handleChipClick}
+          />
+          <ChipRow
+            chips={chipData[1]}
+            direction="left"
+            speed="70s"
+            onChipClick={handleChipClick}
+          />
+          <ChipRow
+            chips={chipData[2]}
+            direction="right"
+            speed="80s"
+            onChipClick={handleChipClick}
+          />
         </div>
       </div>
     </section>

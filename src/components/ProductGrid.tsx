@@ -14,8 +14,8 @@ interface ProductGridProps {
 export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-[800px]">
-        {[...Array(4)].map((_, i) => (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {[...Array(8)].map((_, i) => (
           <div key={i} className="animate-pulse">
             <div className="aspect-square bg-muted rounded-lg mb-3"></div>
             <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
@@ -27,12 +27,9 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
     );
   }
 
-  // Limit to maximum 4 products
-  const displayProducts = products.slice(0, 4);
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-[800px]">
-      {displayProducts.map((product) => (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      {products.map((product) => (
         <div 
           key={product.id}
           className="group border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200"
