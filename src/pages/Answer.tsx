@@ -179,8 +179,8 @@ const Answer = () => {
         </div>
       </main>
 
-      {/* Fixed Bottom Input - Centered with minimal space below */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border">
+      {/* Fixed Bottom Input - Simple without translucent background */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background">
         <div className="mx-auto max-w-2xl px-4 py-3 pb-4">
           <div className="flex gap-3 items-center">
             <div className="flex-1 relative">
