@@ -179,9 +179,9 @@ const Answer = () => {
         </div>
       </main>
 
-      {/* Fixed Bottom Input - Centered with white space below */}
+      {/* Fixed Bottom Input - Centered with minimal space below */}
       <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border">
-        <div className="mx-auto max-w-2xl px-4 py-4 pb-8 mb-6">
+        <div className="mx-auto max-w-2xl px-4 py-3 pb-4">
           <div className="flex gap-3 items-center">
             <div className="flex-1 relative">
               <Textarea
@@ -189,7 +189,7 @@ const Answer = () => {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything about our products..."
-                className="h-[24px] max-h-[120px] rounded-full resize-none px-6 py-2 pr-14 text-base border-2 focus:border-primary"
+                className="h-[12px] max-h-[120px] rounded-full resize-none px-6 py-1 pr-14 text-base border-2 focus:border-primary"
                 aria-label="Ask a question about our products"
                 disabled={isLoading}
               />
@@ -198,10 +198,10 @@ const Answer = () => {
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading}
               size="lg"
-              className="h-[40px] w-[40px] rounded-full p-0 flex-shrink-0"
+              className="h-[32px] w-[32px] rounded-full p-0 flex-shrink-0"
               aria-label="Send message"
             >
-              <Send className="h-4 w-4" />
+              <Send className="h-3 w-3" />
             </Button>
           </div>
         </div>
