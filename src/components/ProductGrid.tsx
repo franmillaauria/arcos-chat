@@ -87,11 +87,9 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           {/* Product Info */}
           <div className="space-y-2">
             {/* Brand */}
-            {product.brand && (
-              <p className="text-[#9AA0A6] text-sm font-semibold uppercase tracking-wide">
-                {product.brand}
-              </p>
-            )}
+            <p className="text-[#9AA0A6] text-sm font-semibold uppercase tracking-wide">
+              {product.brand || 'Riviera Blanc'}
+            </p>
             
             {/* Title */}
             <h3 className="text-[#0B0B0B] text-[17px] md:text-[18px] font-bold leading-tight line-clamp-2">
@@ -100,7 +98,7 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             
             {/* Price */}
             <div className="flex items-center gap-2">
-              <span className="text-[#0B0B0B] text-[16px] md:text-[17px] font-semibold">
+              <span className="text-[#0B0B0B] text-[16px] md:text-[17px] font-normal">
                 {formatPrice(product.price)}
               </span>
               {product.oldPrice && (
@@ -126,7 +124,7 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             </button>
             
             {/* Shipping Info */}
-            <p className="text-[#6B7280] text-sm text-center">
+            <p className="text-[#6B7280] text-sm text-center whitespace-nowrap">
               Envío en un plazo de 3 a 5 días
             </p>
           </div>
