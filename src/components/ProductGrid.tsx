@@ -55,9 +55,9 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             <a
               href={product.link}
               className="inline-flex items-center justify-center w-full h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-              aria-label={`View details for ${product.title}`}
+              aria-label={`Ver más detalles de ${product.title}`}
             >
-              View Details
+              Ver más detalles
             </a>
           </div>
         </div>

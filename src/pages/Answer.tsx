@@ -39,28 +39,28 @@ const Answer = () => {
     {
       id: "1",
       title: "Premium Leather Wallet",
-      price: "$129.99",
+      price: "129,99 €",
       image: productWallet,
       link: "/products/wallet"
     },
     {
       id: "2", 
       title: "Artisan Watch Collection",
-      price: "$899.99",
+      price: "899,99 €",
       image: productWatch,
       link: "/products/watch"
     },
     {
       id: "3",
       title: "Handcrafted Belt",
-      price: "$79.99", 
+      price: "79,99 €", 
       image: productBelt,
       link: "/products/belt"
     },
     {
       id: "4",
       title: "Luxury Travel Bag",
-      price: "$459.99",
+      price: "459,99 €", 
       image: productBag, 
       link: "/products/bag"
     }
@@ -179,17 +179,17 @@ const Answer = () => {
         </div>
       </main>
 
-      {/* Fixed Bottom Input */}
+      {/* Fixed Bottom Input - Centered */}
       <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border">
-        <div className="mx-auto max-w-4xl px-4 py-4 pb-safe">
-          <div className="flex gap-3 items-end">
+        <div className="mx-auto max-w-2xl px-4 py-4 pb-safe">
+          <div className="flex gap-3 items-center">
             <div className="flex-1 relative">
               <Textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask me anything about our products..."
-                className="min-h-[60px] max-h-[120px] rounded-full resize-none px-6 py-4 pr-14 text-base border-2 focus:border-primary"
+                className="h-[48px] max-h-[120px] rounded-full resize-none px-6 py-3 pr-14 text-base border-2 focus:border-primary"
                 aria-label="Ask a question about our products"
                 disabled={isLoading}
               />
@@ -198,10 +198,10 @@ const Answer = () => {
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading}
               size="lg"
-              className="h-[60px] w-[60px] rounded-full p-0 flex-shrink-0"
+              className="h-[48px] w-[48px] rounded-full p-0 flex-shrink-0"
               aria-label="Send message"
             >
-              <Send className="h-5 w-5" />
+              <Send className="h-4 w-4" />
             </Button>
           </div>
         </div>

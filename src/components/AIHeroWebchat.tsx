@@ -72,42 +72,42 @@ const AIHeroWebchat = () => {
           {
             id: "1",
             title: "Cuchillo Chef Premium",
-            price: "$199.99",
+            price: "199,99 €",
             image: knifeChef,
             link: "/products/chef-knife"
           },
           {
             id: "2", 
             title: "Set Cuchillos Profesional",
-            price: "$299.99",
+            price: "299,99 €",
             image: knifeSet,
             link: "/products/knife-set"
           },
           {
             id: "3",
             title: "Cuchillo Santoku",
-            price: "$149.99", 
+            price: "149,99 €", 
             image: knifeSantoku,
             link: "/products/santoku-knife"
           },
           {
             id: "4",
             title: "Cuchillo Deshuesador",
-            price: "$89.99",
+            price: "89,99 €",
             image: knifeBoning,
             link: "/products/boning-knife"
           },
           {
             id: "5",
             title: "Cuchillo de Pan",
-            price: "$79.99",
+            price: "79,99 €",
             image: knifeChef,
             link: "/products/bread-knife"
           },
           {
             id: "6",
             title: "Cuchillo Paring",
-            price: "$59.99",
+            price: "59,99 €",
             image: knifeSantoku,
             link: "/products/paring-knife"
           }
