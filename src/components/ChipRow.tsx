@@ -16,10 +16,10 @@ interface ChipRowProps {
 export const ChipRow = ({ chips, direction, speed, onChipClick }: ChipRowProps) => {
   const animationClass = 
     direction === "right" 
-      ? speed === "38s" 
-        ? "animate-slide-right-38" 
-        : "animate-slide-right-54"
-      : "animate-slide-left-46";
+      ? speed === "60s" 
+        ? "animate-slide-right-60" 
+        : "animate-slide-right-80"
+      : "animate-slide-left-70";
 
   // Triple the chips for seamless infinite loop without gaps
   const tripledChips = [...chips, ...chips, ...chips];

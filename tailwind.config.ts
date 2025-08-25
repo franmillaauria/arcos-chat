@@ -104,9 +104,9 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'slide-right-38': 'slide-right 38s linear infinite',
-				'slide-right-54': 'slide-right 54s linear infinite',
-				'slide-left-46': 'slide-left 46s linear infinite'
+				'slide-right-60': 'slide-right 60s linear infinite',
+				'slide-right-80': 'slide-right 80s linear infinite',
+				'slide-left-70': 'slide-left 70s linear infinite'
 			}
 		}
 	},

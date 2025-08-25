@@ -86,19 +86,19 @@ const AIHeroWebchat = () => {
           <ChipRow
             chips={chipData[0]}
             direction="right"
-            speed="38s"
+            speed="60s"
             onChipClick={handleChipClick}
           />
           <ChipRow
             chips={chipData[1]}
             direction="left"
-            speed="46s"
+            speed="70s"
             onChipClick={handleChipClick}
           />
           <ChipRow
             chips={chipData[2]}
             direction="right"
-            speed="54s"
+            speed="80s"
             onChipClick={handleChipClick}
           />
         </div>

@@ -14,8 +14,8 @@ export const QuestionChip = ({
   onClick 
 }: QuestionChipProps) => {
   const sizeClasses = {
-    md: "min-h-[48px] pl-4 pr-12 text-base",
-    sm: "min-h-[36px] pl-3 pr-10 text-sm"
+    md: "min-h-[48px] px-6 text-base",
+    sm: "min-h-[36px] px-4 text-sm"
   };
 
   const avatarSizes = {
@@ -29,25 +29,27 @@ export const QuestionChip = ({
   };
 
   return (
-    <button
-      className={`
-        relative inline-flex items-center rounded-full font-medium
-        transition-all duration-200 hover:scale-105 cursor-pointer whitespace-nowrap
-        shadow-[0_4px_14px_rgba(0,0,0,0.06)] font-inter font-medium
-        ${sizeClasses[size]}
-        ${variantClasses[variant]}
-      `}
-      onClick={onClick}
-      type="button"
-    >
-      <span className="relative z-10">{text}</span>
+    <div className="relative inline-flex items-center">
+      {/* Main pill button */}
+      <button
+        className={`
+          inline-flex items-center rounded-full font-medium
+          transition-all duration-200 hover:scale-105 cursor-pointer whitespace-nowrap
+          shadow-[0_4px_14px_rgba(0,0,0,0.06)] font-inter font-medium
+          ${sizeClasses[size]}
+          ${variantClasses[variant]}
+        `}
+        onClick={onClick}
+        type="button"
+      >
+        <span>{text}</span>
+      </button>
       
-      {/* Avatar positioned to overflow */}
+      {/* Avatar circle positioned outside the pill */}
       <div 
         className={`
-          absolute right-0 top-1/2 -translate-y-1/2 transform translate-x-2
           ${avatarSizes[size]} rounded-full border-2 border-white
-          bg-gray-300 flex-shrink-0 z-20 overflow-hidden
+          bg-gray-300 flex-shrink-0 overflow-hidden -ml-2
         `}
       >
         {avatarSrc ? (
@@ -60,6 +62,6 @@ export const QuestionChip = ({
           <div className="w-full h-full bg-gradient-to-br from-orange-400 to-red-500" />
         )}
       </div>
-    </button>
+    </div>
   );
 };
