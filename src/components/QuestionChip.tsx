@@ -33,9 +33,9 @@ export const QuestionChip = ({
       {/* Main pill button */}
       <button
         className={`
-          inline-flex items-center rounded-full font-medium
+          inline-flex items-center rounded-full font-normal
           transition-all duration-200 hover:scale-105 cursor-pointer whitespace-nowrap
-          shadow-[0_4px_14px_rgba(0,0,0,0.06)] font-inter font-medium
+          shadow-[0_4px_14px_rgba(0,0,0,0.06)] font-inter
           ${sizeClasses[size]}
           ${variantClasses[variant]}
         `}

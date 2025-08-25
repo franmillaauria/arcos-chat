@@ -177,7 +177,7 @@ const AIHeroWebchat = () => {
 
         {/* Title - Left Aligned */}
         <div className="mb-16">
-          <h1 className="font-bold text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
+          <h1 className="font-normal text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
             ASK ME ANYTHING ABOUT OUR
             <br />
             PRODUCTS, AND SERVICES
