@@ -80,27 +80,32 @@ const AIHeroWebchat = () => {
             PRODUCTS, AND SERVICES
           </h1>
         </div>
+      </div>
 
-        {/* Chip Rows */}
-        <div className="space-y-6 overflow-hidden">
-          <ChipRow
-            chips={chipData[0]}
-            direction="right"
-            speed="60s"
-            onChipClick={handleChipClick}
-          />
-          <ChipRow
-            chips={chipData[1]}
-            direction="left"
-            speed="70s"
-            onChipClick={handleChipClick}
-          />
-          <ChipRow
-            chips={chipData[2]}
-            direction="right"
-            speed="80s"
-            onChipClick={handleChipClick}
-          />
+      {/* White background section for chip rows */}
+      <div className="bg-white">
+        <div className="mx-auto max-w-[1200px]">
+          {/* Chip Rows */}
+          <div className="space-y-6 overflow-hidden py-12">
+            <ChipRow
+              chips={chipData[0]}
+              direction="right"
+              speed="60s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[1]}
+              direction="left"
+              speed="70s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[2]}
+              direction="right"
+              speed="80s"
+              onChipClick={handleChipClick}
+            />
+          </div>
         </div>
       </div>
     </section>
