@@ -85,7 +85,7 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
           </div>
           
           {/* Product Info */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             {/* Brand */}
             <p className="text-[#9AA0A6] text-base font-light capitalize">
               {(product.brand || 'Riviera blanc').toLowerCase()}
@@ -124,7 +124,7 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             </button>
             
             {/* Shipping Info */}
-            <p className="text-[#6B7280] text-xs text-center whitespace-nowrap">
+            <p className="text-[#6B7280] text-[10px] text-center whitespace-nowrap">
               Envío en un plazo de 3 a 5 días
             </p>
           </div>
