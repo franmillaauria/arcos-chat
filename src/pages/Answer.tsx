@@ -125,16 +125,24 @@ const Answer = () => {
         }
         
         console.log("n8n response:", result);
+        console.log("Response type:", typeof result);
+        console.log("Response keys:", Object.keys(result || {}));
         
         // Handle the structure {output: {response: "...", products: []}}
         let output;
         if (result.output) {
+          console.log("Found result.output:", result.output);
           output = result.output;
         } else if (Array.isArray(result) && result[0]?.output) {
+          console.log("Found result[0].output:", result[0].output);
           output = result[0].output;
         } else {
+          console.log("Using result directly:", result);
           output = result;
         }
+        
+        console.log("Final output:", output);
+        console.log("Output response field:", output?.response);
         
         if (!output) {
           throw new Error("Respuesta inválida del servidor - no se encontró output");
