@@ -33,30 +33,35 @@ export const ChatMessage = ({ type, message, products, closing, timestamp }: Cha
   return (
     <div className="flex justify-start mb-8">
       <div className="max-w-[95%] w-full">
-        <div className="bg-muted rounded-2xl rounded-tl-md px-6 py-4 mb-4">
-          <div className="prose prose-lg max-w-none">
+        <div className="bg-muted rounded-2xl rounded-tl-md px-6 py-4">
+          {/* Message text */}
+          <div className="prose prose-lg max-w-none mb-4">
             <p className="text-[18px] leading-[1.6] text-foreground m-0">
               {message}
             </p>
           </div>
-          <span className="text-xs text-muted-foreground mt-2 block">
+          
+          {/* Products */}
+          {products && products.length > 0 && (
+            <div className="mb-4">
+              <ProductGrid products={products} isLoading={false} />
+            </div>
+          )}
+          
+          {/* Closing message */}
+          {closing && (
+            <div className="mb-4">
+              <p className="text-sm text-foreground leading-relaxed">
+                {closing}
+              </p>
+            </div>
+          )}
+          
+          {/* Timestamp */}
+          <span className="text-xs text-muted-foreground block">
             {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
         </div>
-        
-        {products && products.length > 0 && (
-          <div className="mt-4">
-            <ProductGrid products={products} isLoading={false} />
-          </div>
-        )}
-        
-        {closing && (
-          <div className="mt-4 bg-background border border-border rounded-xl px-4 py-3">
-            <p className="text-sm text-foreground leading-relaxed">
-              {closing}
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
