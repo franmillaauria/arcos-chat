@@ -66,9 +66,6 @@ const AIHeroWebchat = () => {
       console.log("Making request to:", N8N_WEBHOOK_URL);
       
       const requestBody = {
-        message: question,
-        query: question,
-        question: question,
         text: question
       };
       
