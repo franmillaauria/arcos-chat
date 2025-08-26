@@ -32,7 +32,7 @@ const Answer = () => {
   const location = useLocation();
   const { toast } = useToast();
 
-  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
+  const N8N_WEBHOOK_URL = "https://n8n.helloauria.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
 
   // Default products to show
   const defaultProducts = [
@@ -126,11 +126,11 @@ const Answer = () => {
         
         console.log("n8n response:", result);
         
-        // Handle the output structure from n8n
-        const output = result.output || result;
+        // Handle the array format with output structure
+        const output = Array.isArray(result) ? result[0]?.output : result;
         
-        if (!output || !output.response) {
-          throw new Error("Respuesta inválida del servidor - no se encontró respuesta");
+        if (!output) {
+          throw new Error("Respuesta inválida del servidor - no se encontró output");
         }
         
         // Transform products to match internal format

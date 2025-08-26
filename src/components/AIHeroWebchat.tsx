@@ -54,7 +54,7 @@ const AIHeroWebchat = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
+  const N8N_WEBHOOK_URL = "https://n8n.helloauria.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
 
   const askAssistant = async (question: string) => {
     if (!question.trim()) return;
@@ -70,24 +70,17 @@ const AIHeroWebchat = () => {
       };
       
       console.log("Request body:", requestBody);
-      console.log("Full URL:", N8N_WEBHOOK_URL);
-      console.log("About to make request...");
       
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
-        mode: "cors",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "User-Agent": "Mozilla/5.0"
         },
         body: JSON.stringify(requestBody)
       });
-      
-      console.log("Response received!");
       console.log("Response status:", response.status);
-      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
-      console.log("Response ok:", response.ok);
+      console.log("Response headers:", response.headers);
 
       if (response.ok) {
         // Check if response has content
@@ -108,11 +101,11 @@ const AIHeroWebchat = () => {
         
         console.log("n8n response:", result);
         
-        // Handle the output structure from n8n
-        const output = result.output || result;
+        // Handle the array format with output structure
+        const output = Array.isArray(result) ? result[0]?.output : result;
         
-        if (!output || !output.response) {
-          throw new Error("Respuesta inválida del servidor - no se encontró respuesta");
+        if (!output) {
+          throw new Error("Respuesta inválida del servidor - no se encontró output");
         }
         
         // Transform products to match internal format
@@ -139,9 +132,7 @@ const AIHeroWebchat = () => {
         });
         
         } else {
-          const errorText = await response.text();
-          console.log("Server error response:", errorText);
-          throw new Error(`Error del servidor (${response.status}): ${errorText || 'Error interno en n8n workflow'}`);
+          throw new Error(`Error del servidor: ${response.status}`);
         }
         
     } catch (error: any) {
