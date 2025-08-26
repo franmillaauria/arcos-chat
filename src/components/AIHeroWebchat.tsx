@@ -97,46 +97,16 @@ const AIHeroWebchat = () => {
         const responseText = await response.text();
         console.log("Raw response:", responseText);
         
-        let result;
         if (!responseText.trim()) {
-          console.warn("Empty response from webhook, using fallback");
-          // Fallback response while webhook is being configured
-          result = {
-            response: "Gracias por tu pregunta. Nuestro asistente está procesando tu solicitud. Mientras tanto, aquí tienes algunos de nuestros productos destacados.",
-            products: [
-              {
-                name: "Cuchillo Chef Premium",
-                price: 199,
-                image: knifeChef,
-                link: "/products/chef-knife"
-              },
-              {
-                name: "Set Cuchillos Profesional", 
-                price: 299,
-                image: knifeSet,
-                link: "/products/knife-set"
-              },
-              {
-                name: "Cuchillo Santoku",
-                price: 149,
-                image: knifeSantoku,
-                link: "/products/santoku-knife"
-              },
-              {
-                name: "Cuchillo Deshuesador",
-                price: 89,
-                image: knifeBoning,
-                link: "/products/boning-knife"
-              }
-            ]
-          };
-        } else {
-          try {
-            result = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error("JSON parse error:", parseError);
-            throw new Error("Invalid JSON response from server");
-          }
+          throw new Error("El webhook no devolvió respuesta");
+        }
+        
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("JSON parse error:", parseError);
+          throw new Error("Respuesta inválida del servidor");
         }
         
         console.log("n8n response:", result);
@@ -164,77 +134,30 @@ const AIHeroWebchat = () => {
           } 
         });
         
-        toast({
-          title: "Respuesta recibida",
-          description: "El asistente ha respondido tu pregunta.",
-        });
-      } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+        } else {
+          throw new Error(`Error del servidor: ${response.status}`);
+        }
+        
     } catch (error: any) {
       console.error("Error:", error);
       
-      // Handle different types of errors
+      // Handle different types of errors with specific messages
       let errorMessage = "No se pudo conectar con el asistente.";
       
       if (error.name === 'AbortError') {
-        errorMessage = "El webhook tardó demasiado en responder.";
+        errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
       } else if (error.message?.includes('Failed to fetch')) {
-        errorMessage = "Error de conexión con el servidor.";
+        errorMessage = "Error de conexión. Verifica tu conexión a internet.";
+      } else if (error.message?.includes('webhook')) {
+        errorMessage = "El asistente no está disponible temporalmente.";
+      } else {
+        errorMessage = error.message || "Error desconocido al conectar con el asistente.";
       }
       
-      console.warn("Using fallback response due to error");
-      
-      // Use fallback response instead of showing error
-      const fallbackResponse = {
-        answer: "Disculpa, hay un problema temporal con nuestro asistente. Aquí tienes algunos de nuestros productos destacados mientras solucionamos el inconveniente.",
-        products: [
-          {
-            id: "1",
-            title: "Cuchillo Chef Premium",
-            price: "199,99 €",
-            image: knifeChef,
-            link: "/products/chef-knife",
-            brand: "Riviera blanc"
-          },
-          {
-            id: "2",
-            title: "Set Cuchillos Profesional",
-            price: "299,99 €",
-            image: knifeSet,
-            link: "/products/knife-set",
-            brand: "Riviera blanc"
-          },
-          {
-            id: "3",
-            title: "Cuchillo Santoku",
-            price: "149,99 €",
-            image: knifeSantoku,
-            link: "/products/santoku-knife",
-            brand: "Riviera blanc"
-          },
-          {
-            id: "4",
-            title: "Cuchillo Deshuesador",
-            price: "89,99 €",
-            image: knifeBoning,
-            link: "/products/boning-knife",
-            brand: "Riviera blanc"
-          }
-        ]
-      };
-      
-      navigate("/answer", { 
-        state: { 
-          question: question,
-          response: fallbackResponse 
-        } 
-      });
-      
       toast({
-        title: "Conectando...",
-        description: "Mostrando productos mientras establecemos conexión.",
+        title: "Error de conexión",
+        description: errorMessage,
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);

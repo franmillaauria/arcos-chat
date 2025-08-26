@@ -121,46 +121,16 @@ const Answer = () => {
         const responseText = await response.text();
         console.log("Raw response:", responseText);
         
-        let result;
         if (!responseText.trim()) {
-          console.warn("Empty response from webhook, using fallback");
-          // Fallback response while webhook is being configured
-          result = {
-            response: "Gracias por tu pregunta. Nuestro asistente está procesando tu solicitud. Mientras tanto, aquí tienes algunos de nuestros productos destacados.",
-            products: [
-              {
-                name: "Wallet Premium",
-                price: 129,
-                image: defaultProducts[0].image,
-                link: defaultProducts[0].link
-              },
-              {
-                name: "Reloj Artesanal", 
-                price: 899,
-                image: defaultProducts[1].image,
-                link: defaultProducts[1].link
-              },
-              {
-                name: "Cinturón Artesanal",
-                price: 79,
-                image: defaultProducts[2].image,
-                link: defaultProducts[2].link
-              },
-              {
-                name: "Bolso de Viaje",
-                price: 459,
-                image: defaultProducts[3].image,
-                link: defaultProducts[3].link
-              }
-            ]
-          };
-        } else {
-          try {
-            result = JSON.parse(responseText);
-          } catch (parseError) {
-            console.error("JSON parse error:", parseError);
-            throw new Error("Invalid JSON response from server");
-          }
+          throw new Error("El webhook no devolvió respuesta");
+        }
+        
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("JSON parse error:", parseError);
+          throw new Error("Respuesta inválida del servidor");
         }
         
         console.log("n8n response:", result);
@@ -187,33 +157,29 @@ const Answer = () => {
           description: "El asistente ha respondido tu pregunta.",
         });
       } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Error del servidor: ${response.status}`);
       }
     } catch (err: any) {
       console.error("Error calling n8n webhook:", err);
       
-      // Handle different types of errors
+      // Handle different types of errors with specific messages
       let errorMessage = "No se pudo conectar con el asistente.";
       
       if (err.name === 'AbortError') {
-        errorMessage = "El webhook tardó demasiado en responder.";
+        errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
       } else if (err.message?.includes('Failed to fetch')) {
-        errorMessage = "Error de conexión con el servidor.";
+        errorMessage = "Error de conexión. Verifica tu conexión a internet.";
+      } else if (err.message?.includes('webhook')) {
+        errorMessage = "El asistente no está disponible temporalmente.";
+      } else {
+        errorMessage = err.message || "Error desconocido al conectar con el asistente.";
       }
       
-      console.warn("Using fallback response due to error");
-      
-      // Use fallback response instead of showing error
-      setAnswerData({
-        text: "Disculpa, hay un problema temporal con nuestro asistente. Aquí tienes algunos productos destacados mientras solucionamos el inconveniente.",
-        products: defaultProducts
-      });
-      
-      setInputValue("");
-      
+      setError(errorMessage);
       toast({
-        title: "Conectando...",
-        description: "Mostrando productos mientras establecemos conexión.",
+        title: "Error de conexión",
+        description: errorMessage,
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
