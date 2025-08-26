@@ -23,6 +23,7 @@ interface ChatMessageData {
   type: 'user' | 'assistant';
   message: string;
   products?: Product[];
+  closing?: string;
   timestamp: Date;
 }
 
@@ -87,6 +88,7 @@ const Answer = () => {
           type: 'assistant',
           message: response.answer || response.response || response.text || "No se recibió respuesta del asistente.",
           products: response.products || defaultProducts,
+          closing: response.closing,
           timestamp: new Date()
         }
       ];
@@ -191,6 +193,7 @@ const Answer = () => {
           type: 'assistant',
           message: output.response || `Respuesta a: "${userMessage}"`,
           products: transformedProducts.length > 0 ? transformedProducts : undefined,
+          closing: output.closing,
           timestamp: new Date()
         };
         

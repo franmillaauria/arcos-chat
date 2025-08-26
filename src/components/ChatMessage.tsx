@@ -12,10 +12,11 @@ interface ChatMessageProps {
   type: 'user' | 'assistant';
   message: string;
   products?: Product[];
+  closing?: string;
   timestamp: Date;
 }
 
-export const ChatMessage = ({ type, message, products, timestamp }: ChatMessageProps) => {
+export const ChatMessage = ({ type, message, products, closing, timestamp }: ChatMessageProps) => {
   if (type === 'user') {
     return (
       <div className="flex justify-end mb-6">
@@ -46,6 +47,14 @@ export const ChatMessage = ({ type, message, products, timestamp }: ChatMessageP
         {products && products.length > 0 && (
           <div className="mt-4">
             <ProductGrid products={products} isLoading={false} />
+          </div>
+        )}
+        
+        {closing && (
+          <div className="mt-4 bg-background border border-border rounded-xl px-4 py-3">
+            <p className="text-sm text-foreground leading-relaxed">
+              {closing}
+            </p>
           </div>
         )}
       </div>

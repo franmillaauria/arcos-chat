@@ -14,6 +14,7 @@ interface ChatMessageData {
   type: 'user' | 'assistant';
   message: string;
   products?: Product[];
+  closing?: string;
   timestamp: Date;
 }
 
@@ -41,6 +42,7 @@ export const ChatHistory = ({ messages, isLoading }: ChatHistoryProps) => {
           type={msg.type}
           message={msg.message}
           products={msg.products}
+          closing={msg.closing}
           timestamp={msg.timestamp}
         />
       ))}
