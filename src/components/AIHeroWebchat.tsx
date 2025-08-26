@@ -132,7 +132,9 @@ const AIHeroWebchat = () => {
         });
         
         } else {
-          throw new Error(`Error del servidor: ${response.status}`);
+          const errorText = await response.text();
+          console.log("Server error response:", errorText);
+          throw new Error(`Error del servidor (${response.status}): ${errorText || 'Error interno en n8n workflow'}`);
         }
         
     } catch (error: any) {
