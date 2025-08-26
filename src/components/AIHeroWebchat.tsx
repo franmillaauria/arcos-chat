@@ -76,7 +76,22 @@ const AIHeroWebchat = () => {
       });
 
       if (response.ok) {
-        const result = await response.json();
+        // Check if response has content
+        const responseText = await response.text();
+        console.log("Raw response:", responseText);
+        
+        if (!responseText.trim()) {
+          throw new Error("Empty response from server");
+        }
+        
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("JSON parse error:", parseError);
+          throw new Error("Invalid JSON response from server");
+        }
+        
         console.log("n8n response:", result);
         
         // Transform products to match internal format
