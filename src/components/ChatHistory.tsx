@@ -34,10 +34,18 @@ export const ChatHistory = ({ messages, isLoading }: ChatHistoryProps) => {
     }
   };
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    // Only scroll when a new message is added (not during loading)
+    // Scroll to last message when a new message is added (not during loading)
     if (messages.length > 0 && !isLoading) {
       scrollToLastMessage();
+    }
+    // Scroll to bottom when loading starts to show loading messages
+    else if (isLoading) {
+      scrollToBottom();
     }
   }, [messages.length, isLoading]);
 
