@@ -117,15 +117,17 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
             <button
               onClick={(e) => handleAddToCart(e, product.id)}
               disabled={product.inStock === false}
-              className="w-full h-11 md:h-12 bg-foreground text-background font-semibold rounded-full transition-all duration-200 hover:bg-foreground/90 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-opacity-24"
+              className="w-full h-11 md:h-12 bg-foreground text-background font-semibold rounded-full transition-all duration-200 hover:bg-foreground/90 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-opacity-24 text-sm md:text-base"
               aria-label={`Agregar ${product.title} al carrito`}
             >
-              {product.inStock === false ? 'Agotado' : 'Agregar al carrito'}
+              {product.inStock === false ? 'Agotado' : <span className="hidden sm:inline">Agregar al carrito</span>}
+              {product.inStock !== false && <span className="sm:hidden">Agregar</span>}
             </button>
             
             {/* Shipping Info */}
-            <p className="text-[#6B7280] text-xs text-center whitespace-nowrap">
-              Envío en un plazo de 3 a 5 días
+            <p className="text-[#6B7280] text-xs text-center">
+              <span className="hidden sm:inline">Envío en un plazo de 3 a 5 días</span>
+              <span className="sm:hidden">Envío 3-5 días</span>
             </p>
           </div>
         </a>

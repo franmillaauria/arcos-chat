@@ -46,7 +46,7 @@ export const LoadingMessage = ({ isLoading }: LoadingMessageProps) => {
       setCurrentMessageIndex((prevIndex) => 
         (prevIndex + 1) % currentMessages.length
       );
-    }, 2000); // Change message every 2 seconds
+    }, 2500); // Change message every 2.5 seconds
 
     return () => clearInterval(messageTimer);
   }, [isLoading, currentMessages.length]);
