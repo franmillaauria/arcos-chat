@@ -73,7 +73,7 @@ const Answer = () => {
       console.log("Received from navigation:", { question, response });
       
       setAnswerData({
-        text: response.response || response.answer || response.text || response.message || "Respuesta recibida del asistente.",
+        text: response.answer || "No se recibió respuesta del asistente.",
         products: response.products || defaultProducts
       });
     }
@@ -90,17 +90,10 @@ const Answer = () => {
       console.log("Making request to:", N8N_WEBHOOK_URL);
       
       const requestBody = {
-        message: inputValue,
-        query: inputValue,
-        question: inputValue,
         text: inputValue
       };
       
       console.log("Request body:", requestBody);
-      
-      // Create AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
       
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
@@ -108,11 +101,8 @@ const Answer = () => {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
+        body: JSON.stringify(requestBody)
       });
-      
-      clearTimeout(timeoutId);
       console.log("Response status:", response.status);
       console.log("Response headers:", response.headers);
 
@@ -135,18 +125,25 @@ const Answer = () => {
         
         console.log("n8n response:", result);
         
+        // Handle the array format with output structure
+        const output = Array.isArray(result) ? result[0]?.output : result;
+        
+        if (!output) {
+          throw new Error("Respuesta inválida del servidor - no se encontró output");
+        }
+        
         // Transform products to match internal format
-        const transformedProducts = result.products?.map((product: any, index: number) => ({
+        const transformedProducts = output.products?.map((product: any, index: number) => ({
           id: `${index + 1}`,
           title: product.name,
-          price: `${product.price},99 €`,
+          price: `${product.price} €`,
           image: product.image,
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
           brand: "Riviera blanc"
         })) || defaultProducts;
         
         setAnswerData({
-          text: result.response || `Respuesta a: "${inputValue}"`,
+          text: output.response || `Respuesta a: "${inputValue}"`,
           products: transformedProducts
         });
         
