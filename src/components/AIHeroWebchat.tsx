@@ -59,121 +59,13 @@ const AIHeroWebchat = () => {
   const askAssistant = async (question: string) => {
     if (!question.trim()) return;
     
-    setIsLoading(true);
-    console.log("Sending question to n8n:", question);
-
-    try {
-      console.log("Making request to:", N8N_WEBHOOK_URL);
-      
-      const requestBody = {
-        text: question
-      };
-      
-      console.log("Request body:", requestBody);
-      
-      const response = await fetch(N8N_WEBHOOK_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify(requestBody)
-      });
-      console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
-
-      if (response.ok) {
-        // Check if response has content
-        const responseText = await response.text();
-        console.log("Raw response:", responseText);
-        
-        if (!responseText.trim()) {
-          throw new Error("El webhook no devolvió respuesta");
-        }
-        
-        let result;
-        try {
-          result = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("JSON parse error:", parseError);
-          throw new Error("Respuesta inválida del servidor");
-        }
-        
-        console.log("n8n response:", result);
-        console.log("Response type:", typeof result);
-        console.log("Response keys:", Object.keys(result || {}));
-        
-        // Handle the structure {output: {response: "...", products: []}}
-        let output;
-        if (result.output) {
-          console.log("Found result.output:", result.output);
-          output = result.output;
-        } else if (Array.isArray(result) && result[0]?.output) {
-          console.log("Found result[0].output:", result[0].output);
-          output = result[0].output;
-        } else {
-          console.log("Using result directly:", result);
-          output = result;
-        }
-        
-        console.log("Final output:", output);
-        console.log("Output response field:", output?.response);
-        
-        if (!output) {
-          throw new Error("Respuesta inválida del servidor - no se encontró output");
-        }
-        
-        // Transform products to match internal format
-        const transformedProducts = output.products?.map((product: any, index: number) => ({
-          id: `${index + 1}`,
-          title: product.name,
-          price: `${product.price} €`,
-          image: product.image || knifeChef,
-          link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
-          brand: "Riviera blanc"
-        })) || [];
-        
-        const transformedResponse = {
-          answer: output.response,
-          products: transformedProducts
-        };
-        
-        // Navigate to answer page with the response
-        navigate("/answer", { 
-          state: { 
-            question: question,
-            response: transformedResponse 
-          } 
-        });
-        
-        } else {
-          throw new Error(`Error del servidor: ${response.status}`);
-        }
-        
-    } catch (error: any) {
-      console.error("Error:", error);
-      
-      // Handle different types of errors with specific messages
-      let errorMessage = "No se pudo conectar con el asistente.";
-      
-      if (error.name === 'AbortError') {
-        errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
-      } else if (error.message?.includes('Failed to fetch')) {
-        errorMessage = "Error de conexión. Verifica tu conexión a internet.";
-      } else if (error.message?.includes('webhook')) {
-        errorMessage = "El asistente no está disponible temporalmente.";
-      } else {
-        errorMessage = error.message || "Error desconocido al conectar con el asistente.";
-      }
-      
-      toast({
-        title: "Error de conexión",
-        description: errorMessage,
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    // Navigate immediately to answer page with the question
+    navigate("/answer", { 
+      state: { 
+        question: question,
+        isLoading: true
+      } 
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {

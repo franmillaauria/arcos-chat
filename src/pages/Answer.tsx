@@ -71,31 +71,134 @@ const Answer = () => {
 
   // Check if we have data from navigation (from hero page)
   useEffect(() => {
-    if (location.state?.response) {
-      const { question, response } = location.state;
-      console.log("Received from navigation:", { question, response });
-      console.log("Response structure:", JSON.stringify(response, null, 2));
+    if (location.state?.question) {
+      const { question, response, isLoading: navigationLoading } = location.state;
       
-      const initialMessages: ChatMessageData[] = [
-        {
-          id: '1',
-          type: 'user',
-          message: question,
-          timestamp: new Date()
-        },
-        {
+      // Add user message immediately
+      const userMessage: ChatMessageData = {
+        id: '1',
+        type: 'user',
+        message: question,
+        timestamp: new Date()
+      };
+      
+      setMessages([userMessage]);
+      
+      // If we have a response already, add it
+      if (response) {
+        const assistantMessage: ChatMessageData = {
           id: '2',
           type: 'assistant',
           message: response.answer || response.response || response.text || "No se recibió respuesta del asistente.",
           products: response.products || defaultProducts,
           closing: response.closing,
           timestamp: new Date()
-        }
-      ];
-      
-      setMessages(initialMessages);
+        };
+        setMessages([userMessage, assistantMessage]);
+      } else if (navigationLoading) {
+        // Start loading and make API call
+        setIsLoading(true);
+        handleApiCall(question);
+      }
     }
   }, [location.state]);
+
+  const handleApiCall = async (question: string) => {
+    try {
+      console.log("Making request to:", N8N_WEBHOOK_URL);
+      
+      const requestBody = {
+        text: question
+      };
+      
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (response.ok) {
+        const responseText = await response.text();
+        
+        if (!responseText.trim()) {
+          throw new Error("El webhook no devolvió respuesta");
+        }
+        
+        let result;
+        try {
+          result = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("JSON parse error:", parseError);
+          throw new Error("Respuesta inválida del servidor");
+        }
+        
+        // Handle the structure {output: {response: "...", products: []}}
+        let output;
+        if (result.output) {
+          output = result.output;
+        } else if (Array.isArray(result) && result[0]?.output) {
+          output = result[0].output;
+        } else {
+          output = result;
+        }
+        
+        if (!output) {
+          throw new Error("Respuesta inválida del servidor - no se encontró output");
+        }
+        
+        // Transform products to match internal format
+        const transformedProducts = output.products?.map((product: any, index: number) => ({
+          id: `${index + 1}`,
+          title: product.name,
+          price: `${product.price} €`,
+          image: product.image,
+          link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
+          brand: product.serie || "Arcos"
+        })) || [];
+        
+        // Add assistant response to chat
+        const assistantMessage: ChatMessageData = {
+          id: Date.now().toString() + '_response',
+          type: 'assistant',
+          message: output.response || `Respuesta a: "${question}"`,
+          products: transformedProducts.length > 0 ? transformedProducts : undefined,
+          closing: output.closing,
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, assistantMessage]);
+        
+      } else {
+        throw new Error(`Error del servidor: ${response.status}`);
+      }
+    } catch (err: any) {
+      console.error("Error calling n8n webhook:", err);
+      
+      let errorMessage = "No se pudo conectar con el asistente.";
+      
+      if (err.name === 'AbortError') {
+        errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
+      } else if (err.message?.includes('Failed to fetch')) {
+        errorMessage = "Error de conexión. Verifica tu conexión a internet.";
+      } else if (err.message?.includes('webhook')) {
+        errorMessage = "El asistente no está disponible temporalmente.";
+      } else {
+        errorMessage = err.message || "Error desconocido al conectar con el asistente.";
+      }
+      
+      setError(errorMessage);
+      toast({
+        title: "Error de conexión",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
