@@ -3,8 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ProductGrid } from "@/components/ProductGrid";
-import { ResponseSkeleton } from "@/components/ResponseSkeleton";
+import { ChatHistory } from "@/components/ChatHistory";
 import { useToast } from "@/hooks/use-toast";
 import productWallet from "@/assets/product-wallet.jpg";
 import productWatch from "@/assets/product-watch.jpg";
@@ -19,16 +18,19 @@ interface Product {
   link: string;
 }
 
-interface AnswerData {
-  text: string;
+interface ChatMessageData {
+  id: string;
+  type: 'user' | 'assistant';
+  message: string;
   products?: Product[];
+  timestamp: Date;
 }
 
 const Answer = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [answerData, setAnswerData] = useState<AnswerData | null>(null);
+  const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const location = useLocation();
   const { toast } = useToast();
 
@@ -73,25 +75,50 @@ const Answer = () => {
       console.log("Received from navigation:", { question, response });
       console.log("Response structure:", JSON.stringify(response, null, 2));
       
-      setAnswerData({
-        text: response.answer || response.response || response.text || "No se recibió respuesta del asistente.",
-        products: response.products || defaultProducts
-      });
+      const initialMessages: ChatMessageData[] = [
+        {
+          id: '1',
+          type: 'user',
+          message: question,
+          timestamp: new Date()
+        },
+        {
+          id: '2',
+          type: 'assistant',
+          message: response.answer || response.response || response.text || "No se recibió respuesta del asistente.",
+          products: response.products || defaultProducts,
+          timestamp: new Date()
+        }
+      ];
+      
+      setMessages(initialMessages);
     }
   }, [location.state]);
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
     
+    const userMessage = inputValue.trim();
+    
+    // Add user message to chat
+    const userChatMessage: ChatMessageData = {
+      id: Date.now().toString(),
+      type: 'user',
+      message: userMessage,
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userChatMessage]);
+    setInputValue("");
     setIsLoading(true);
     setError(null);
-    console.log("Sending question to n8n:", inputValue);
+    console.log("Sending question to n8n:", userMessage);
     
     try {
       console.log("Making request to:", N8N_WEBHOOK_URL);
       
       const requestBody = {
-        text: inputValue
+        text: userMessage
       };
       
       console.log("Request body:", requestBody);
@@ -156,14 +183,18 @@ const Answer = () => {
           image: product.image,
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
           brand: "Riviera blanc"
-        })) || defaultProducts;
+        })) || [];
         
-        setAnswerData({
-          text: output.response || `Respuesta a: "${inputValue}"`,
-          products: transformedProducts
-        });
+        // Add assistant response to chat
+        const assistantMessage: ChatMessageData = {
+          id: Date.now().toString() + '_response',
+          type: 'assistant',
+          message: output.response || `Respuesta a: "${userMessage}"`,
+          products: transformedProducts.length > 0 ? transformedProducts : undefined,
+          timestamp: new Date()
+        };
         
-        setInputValue("");
+        setMessages(prev => [...prev, assistantMessage]);
         
         toast({
           title: "Respuesta recibida",
@@ -218,33 +249,21 @@ const Answer = () => {
             </div>
           )}
 
-          {/* Response Area */}
+          {/* Chat History */}
           <div 
             className="mb-12"
             role="main"
             aria-live="polite"
-            aria-label="AI Assistant Response"
+            aria-label="Chat Conversation"
           >
-            {isLoading ? (
-              <ResponseSkeleton />
-            ) : answerData ? (
-              <div className="max-w-[900px]">
-                <div className="prose prose-lg max-w-none">
-                  <p className="text-[18px] leading-[1.6] text-foreground m-0">
-                    {answerData.text}
-                  </p>
-                </div>
+            {messages.length === 0 && !isLoading ? (
+              <div className="text-center text-muted-foreground py-12">
+                <p>¡Hola! Pregúntame lo que quieras sobre nuestros productos.</p>
               </div>
-            ) : null}
+            ) : (
+              <ChatHistory messages={messages} isLoading={isLoading} />
+            )}
           </div>
-
-          {/* Product Grid */}
-          {answerData?.products && answerData.products.length > 0 && (
-            <ProductGrid 
-              products={answerData.products} 
-              isLoading={isLoading}
-            />
-          )}
         </div>
       </main>
 
