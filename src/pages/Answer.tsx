@@ -71,9 +71,10 @@ const Answer = () => {
     if (location.state?.response) {
       const { question, response } = location.state;
       console.log("Received from navigation:", { question, response });
+      console.log("Response structure:", JSON.stringify(response, null, 2));
       
       setAnswerData({
-        text: response.answer || "No se recibió respuesta del asistente.",
+        text: response.answer || response.response || response.text || "No se recibió respuesta del asistente.",
         products: response.products || defaultProducts
       });
     }
