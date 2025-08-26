@@ -182,7 +182,7 @@ const Answer = () => {
           price: `${product.price} €`,
           image: product.image,
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
-          brand: "Riviera blanc"
+          brand: product.serie || "Arcos"
         })) || [];
         
         // Add assistant response to chat
