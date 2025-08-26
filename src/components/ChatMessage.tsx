@@ -33,7 +33,7 @@ export const ChatMessage = ({ type, message, products, closing, timestamp }: Cha
   return (
     <div className="flex justify-start mb-8">
       <div className="max-w-[95%] w-full">
-        <div className="bg-muted rounded-2xl rounded-tl-md px-6 py-4">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-md px-6 py-4">
           {/* Message text */}
           <div className="prose prose-lg max-w-none mb-4">
             <p className="text-[18px] leading-[1.6] text-foreground m-0">

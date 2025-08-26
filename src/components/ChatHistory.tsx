@@ -26,26 +26,33 @@ interface ChatHistoryProps {
 
 export const ChatHistory = ({ messages, isLoading }: ChatHistoryProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToLastMessage = () => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading]);
+    // Only scroll when a new message is added (not during loading)
+    if (messages.length > 0 && !isLoading) {
+      scrollToLastMessage();
+    }
+  }, [messages.length, isLoading]);
 
   return (
     <div className="space-y-4">
-      {messages.map((msg) => (
-        <ChatMessage
-          key={msg.id}
-          type={msg.type}
-          message={msg.message}
-          products={msg.products}
-          closing={msg.closing}
-          timestamp={msg.timestamp}
-        />
+      {messages.map((msg, index) => (
+        <div key={msg.id} ref={index === messages.length - 1 ? lastMessageRef : undefined}>
+          <ChatMessage
+            type={msg.type}
+            message={msg.message}
+            products={msg.products}
+            closing={msg.closing}
+            timestamp={msg.timestamp}
+          />
+        </div>
       ))}
       
       <LoadingMessage isLoading={isLoading} />
