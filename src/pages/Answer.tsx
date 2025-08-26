@@ -32,7 +32,7 @@ const Answer = () => {
   const location = useLocation();
   const { toast } = useToast();
 
-  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/ecd5f122-250e-4db6-ab5a-98060c92d986";
+  const N8N_WEBHOOK_URL = "https://n8n.helloauria.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
 
   // Default products to show
   const defaultProducts = [
@@ -73,7 +73,7 @@ const Answer = () => {
       console.log("Received from navigation:", { question, response });
       
       setAnswerData({
-        text: response.answer || response.text || response.message || "Respuesta recibida del asistente.",
+        text: response.response || response.answer || response.text || response.message || "Respuesta recibida del asistente.",
         products: response.products || defaultProducts
       });
     }
@@ -103,9 +103,19 @@ const Answer = () => {
         const result = await response.json();
         console.log("n8n response:", result);
         
+        // Transform products to match internal format
+        const transformedProducts = result.products?.map((product: any, index: number) => ({
+          id: `${index + 1}`,
+          title: product.name,
+          price: `${product.price},99 €`,
+          image: product.image,
+          link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
+          brand: "Riviera blanc"
+        })) || defaultProducts;
+        
         setAnswerData({
-          text: result.answer || result.text || result.message || `Respuesta a: "${inputValue}"`,
-          products: result.products || defaultProducts
+          text: result.response || `Respuesta a: "${inputValue}"`,
+          products: transformedProducts
         });
         
         setInputValue("");

@@ -54,73 +54,61 @@ const AIHeroWebchat = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/ecd5f122-250e-4db6-ab5a-98060c92d986";
+  const N8N_WEBHOOK_URL = "https://n8n.helloauria.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
 
   const askAssistant = async (question: string) => {
     if (!question.trim()) return;
     
     setIsLoading(true);
-    console.log("Sending question:", question);
+    console.log("Sending question to n8n:", question);
 
     try {
-      // Demo response for testing
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const demoResponse = {
-        answer: "Claro, aquí tienes los cuchillos por los que me preguntabas",
-        products: [
-          {
-            id: "1",
-            title: "Cuchillo Chef Premium",
-            price: "199,99 €",
-            image: knifeChef,
-            link: "/products/chef-knife"
-          },
-          {
-            id: "2", 
-            title: "Set Cuchillos Profesional",
-            price: "299,99 €",
-            image: knifeSet,
-            link: "/products/knife-set"
-          },
-          {
-            id: "3",
-            title: "Cuchillo Santoku",
-            price: "149,99 €", 
-            image: knifeSantoku,
-            link: "/products/santoku-knife"
-          },
-          {
-            id: "4",
-            title: "Cuchillo Deshuesador",
-            price: "89,99 €",
-            image: knifeBoning,
-            link: "/products/boning-knife"
-          },
-          {
-            id: "5",
-            title: "Cuchillo de Pan",
-            price: "79,99 €",
-            image: knifeChef,
-            link: "/products/bread-knife"
-          },
-          {
-            id: "6",
-            title: "Cuchillo Paring",
-            price: "59,99 €",
-            image: knifeSantoku,
-            link: "/products/paring-knife"
-          }
-        ]
-      };
-      
-      // Navigate to answer page with the demo response
-      navigate("/answer", { 
-        state: { 
+      const response = await fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           question: question,
-          response: demoResponse 
-        } 
+          timestamp: new Date().toISOString(),
+          source: "hero_page"
+        }),
       });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("n8n response:", result);
+        
+        // Transform products to match internal format
+        const transformedProducts = result.products?.map((product: any, index: number) => ({
+          id: `${index + 1}`,
+          title: product.name,
+          price: `${product.price},99 €`,
+          image: product.image || knifeChef,
+          link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
+          brand: "Riviera blanc"
+        })) || [];
+        
+        const transformedResponse = {
+          answer: result.response,
+          products: transformedProducts
+        };
+        
+        // Navigate to answer page with the response
+        navigate("/answer", { 
+          state: { 
+            question: question,
+            response: transformedResponse 
+          } 
+        });
+        
+        toast({
+          title: "Respuesta recibida",
+          description: "El asistente ha respondido tu pregunta.",
+        });
+      } else {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       
     } catch (error) {
       console.error("Error:", error);
