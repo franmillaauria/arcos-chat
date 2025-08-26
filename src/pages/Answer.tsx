@@ -126,8 +126,15 @@ const Answer = () => {
         
         console.log("n8n response:", result);
         
-        // Handle the array format with output structure
-        const output = Array.isArray(result) ? result[0]?.output : result;
+        // Handle the structure {output: {response: "...", products: []}}
+        let output;
+        if (result.output) {
+          output = result.output;
+        } else if (Array.isArray(result) && result[0]?.output) {
+          output = result[0].output;
+        } else {
+          output = result;
+        }
         
         if (!output) {
           throw new Error("Respuesta inválida del servidor - no se encontró output");
