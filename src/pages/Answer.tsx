@@ -126,11 +126,11 @@ const Answer = () => {
         
         console.log("n8n response:", result);
         
-        // Handle the array format with output structure
-        const output = Array.isArray(result) ? result[0]?.output : result;
+        // Handle the output structure from n8n
+        const output = result.output || result;
         
-        if (!output) {
-          throw new Error("Respuesta inválida del servidor - no se encontró output");
+        if (!output || !output.response) {
+          throw new Error("Respuesta inválida del servidor - no se encontró respuesta");
         }
         
         // Transform products to match internal format
