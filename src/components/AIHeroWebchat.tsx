@@ -101,18 +101,25 @@ const AIHeroWebchat = () => {
         
         console.log("n8n response:", result);
         
+        // Handle the array format with output structure
+        const output = Array.isArray(result) ? result[0]?.output : result;
+        
+        if (!output) {
+          throw new Error("Respuesta inválida del servidor - no se encontró output");
+        }
+        
         // Transform products to match internal format
-        const transformedProducts = result.products?.map((product: any, index: number) => ({
+        const transformedProducts = output.products?.map((product: any, index: number) => ({
           id: `${index + 1}`,
           title: product.name,
-          price: `${product.price},99 €`,
+          price: `${product.price} €`,
           image: product.image || knifeChef,
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
           brand: "Riviera blanc"
         })) || [];
         
         const transformedResponse = {
-          answer: result.response,
+          answer: output.response,
           products: transformedProducts
         };
         
