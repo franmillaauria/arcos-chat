@@ -75,9 +75,11 @@ const AIHeroWebchat = () => {
       
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "User-Agent": "Mozilla/5.0"
         },
         body: JSON.stringify(requestBody)
       });
