@@ -71,21 +71,14 @@ const AIHeroWebchat = () => {
       
       console.log("Request body:", requestBody);
       
-      // Create AbortController for timeout
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: JSON.stringify(requestBody),
-        signal: controller.signal
+        body: JSON.stringify(requestBody)
       });
-      
-      clearTimeout(timeoutId);
       console.log("Response status:", response.status);
       console.log("Response headers:", response.headers);
 
