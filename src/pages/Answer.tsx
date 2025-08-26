@@ -87,17 +87,28 @@ const Answer = () => {
     console.log("Sending question to n8n:", inputValue);
     
     try {
+      console.log("Making request to:", N8N_WEBHOOK_URL);
+      
+      const requestBody = {
+        message: inputValue,
+        query: inputValue,
+        question: inputValue,
+        text: inputValue
+      };
+      
+      console.log("Request body:", requestBody);
+      
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
-        body: JSON.stringify({
-          question: inputValue,
-          timestamp: new Date().toISOString(),
-          source: "answer_page"
-        }),
+        body: JSON.stringify(requestBody),
       });
+      
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
 
       if (response.ok) {
         // Check if response has content

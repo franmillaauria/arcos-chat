@@ -63,17 +63,28 @@ const AIHeroWebchat = () => {
     console.log("Sending question to n8n:", question);
 
     try {
+      console.log("Making request to:", N8N_WEBHOOK_URL);
+      
+      const requestBody = {
+        message: question,
+        query: question,
+        question: question,
+        text: question
+      };
+      
+      console.log("Request body:", requestBody);
+      
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json",
         },
-        body: JSON.stringify({
-          question: question,
-          timestamp: new Date().toISOString(),
-          source: "hero_page"
-        }),
+        body: JSON.stringify(requestBody),
       });
+      
+      console.log("Response status:", response.status);
+      console.log("Response headers:", response.headers);
 
       if (response.ok) {
         // Check if response has content
