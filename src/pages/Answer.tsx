@@ -115,16 +115,46 @@ const Answer = () => {
         const responseText = await response.text();
         console.log("Raw response:", responseText);
         
-        if (!responseText.trim()) {
-          throw new Error("Empty response from server");
-        }
-        
         let result;
-        try {
-          result = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("JSON parse error:", parseError);
-          throw new Error("Invalid JSON response from server");
+        if (!responseText.trim()) {
+          console.warn("Empty response from webhook, using fallback");
+          // Fallback response while webhook is being configured
+          result = {
+            response: "Gracias por tu pregunta. Nuestro asistente está procesando tu solicitud. Mientras tanto, aquí tienes algunos de nuestros productos destacados.",
+            products: [
+              {
+                name: "Wallet Premium",
+                price: 129,
+                image: defaultProducts[0].image,
+                link: defaultProducts[0].link
+              },
+              {
+                name: "Reloj Artesanal", 
+                price: 899,
+                image: defaultProducts[1].image,
+                link: defaultProducts[1].link
+              },
+              {
+                name: "Cinturón Artesanal",
+                price: 79,
+                image: defaultProducts[2].image,
+                link: defaultProducts[2].link
+              },
+              {
+                name: "Bolso de Viaje",
+                price: 459,
+                image: defaultProducts[3].image,
+                link: defaultProducts[3].link
+              }
+            ]
+          };
+        } else {
+          try {
+            result = JSON.parse(responseText);
+          } catch (parseError) {
+            console.error("JSON parse error:", parseError);
+            throw new Error("Invalid JSON response from server");
+          }
         }
         
         console.log("n8n response:", result);

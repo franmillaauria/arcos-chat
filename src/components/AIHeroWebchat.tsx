@@ -91,16 +91,46 @@ const AIHeroWebchat = () => {
         const responseText = await response.text();
         console.log("Raw response:", responseText);
         
-        if (!responseText.trim()) {
-          throw new Error("Empty response from server");
-        }
-        
         let result;
-        try {
-          result = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("JSON parse error:", parseError);
-          throw new Error("Invalid JSON response from server");
+        if (!responseText.trim()) {
+          console.warn("Empty response from webhook, using fallback");
+          // Fallback response while webhook is being configured
+          result = {
+            response: "Gracias por tu pregunta. Nuestro asistente está procesando tu solicitud. Mientras tanto, aquí tienes algunos de nuestros productos destacados.",
+            products: [
+              {
+                name: "Cuchillo Chef Premium",
+                price: 199,
+                image: knifeChef,
+                link: "/products/chef-knife"
+              },
+              {
+                name: "Set Cuchillos Profesional", 
+                price: 299,
+                image: knifeSet,
+                link: "/products/knife-set"
+              },
+              {
+                name: "Cuchillo Santoku",
+                price: 149,
+                image: knifeSantoku,
+                link: "/products/santoku-knife"
+              },
+              {
+                name: "Cuchillo Deshuesador",
+                price: 89,
+                image: knifeBoning,
+                link: "/products/boning-knife"
+              }
+            ]
+          };
+        } else {
+          try {
+            result = JSON.parse(responseText);
+          } catch (parseError) {
+            console.error("JSON parse error:", parseError);
+            throw new Error("Invalid JSON response from server");
+          }
         }
         
         console.log("n8n response:", result);
