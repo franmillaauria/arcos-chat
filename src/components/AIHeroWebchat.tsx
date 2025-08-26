@@ -70,6 +70,8 @@ const AIHeroWebchat = () => {
       };
       
       console.log("Request body:", requestBody);
+      console.log("Full URL:", N8N_WEBHOOK_URL);
+      console.log("About to make request...");
       
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
@@ -79,8 +81,11 @@ const AIHeroWebchat = () => {
         },
         body: JSON.stringify(requestBody)
       });
+      
+      console.log("Response received!");
       console.log("Response status:", response.status);
-      console.log("Response headers:", response.headers);
+      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+      console.log("Response ok:", response.ok);
 
       if (response.ok) {
         // Check if response has content
