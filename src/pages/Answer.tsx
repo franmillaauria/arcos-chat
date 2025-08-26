@@ -98,6 +98,10 @@ const Answer = () => {
       
       console.log("Request body:", requestBody);
       
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
@@ -105,8 +109,10 @@ const Answer = () => {
           "Accept": "application/json",
         },
         body: JSON.stringify(requestBody),
+        signal: controller.signal
       });
       
+      clearTimeout(timeoutId);
       console.log("Response status:", response.status);
       console.log("Response headers:", response.headers);
 
@@ -183,13 +189,31 @@ const Answer = () => {
       } else {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error calling n8n webhook:", err);
-      setError("No se pudo conectar con el asistente. Por favor, inténtalo de nuevo.");
+      
+      // Handle different types of errors
+      let errorMessage = "No se pudo conectar con el asistente.";
+      
+      if (err.name === 'AbortError') {
+        errorMessage = "El webhook tardó demasiado en responder.";
+      } else if (err.message?.includes('Failed to fetch')) {
+        errorMessage = "Error de conexión con el servidor.";
+      }
+      
+      console.warn("Using fallback response due to error");
+      
+      // Use fallback response instead of showing error
+      setAnswerData({
+        text: "Disculpa, hay un problema temporal con nuestro asistente. Aquí tienes algunos productos destacados mientras solucionamos el inconveniente.",
+        products: defaultProducts
+      });
+      
+      setInputValue("");
+      
       toast({
-        title: "Error",
-        description: "No se pudo obtener respuesta. Inténtalo de nuevo.",
-        variant: "destructive"
+        title: "Conectando...",
+        description: "Mostrando productos mientras establecemos conexión.",
       });
     } finally {
       setIsLoading(false);
