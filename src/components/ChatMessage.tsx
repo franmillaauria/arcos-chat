@@ -51,7 +51,7 @@ export const ChatMessage = ({ type, message, products, closing, timestamp }: Cha
           {/* Closing message */}
           {closing && (
             <div className="mb-4">
-              <p className="text-sm text-foreground leading-relaxed">
+              <p className="text-[18px] leading-[1.6] text-foreground m-0">
                 {closing}
               </p>
             </div>
