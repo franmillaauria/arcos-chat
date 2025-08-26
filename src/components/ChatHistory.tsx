@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ChatMessage } from "./ChatMessage";
+import { LoadingMessage } from "./LoadingMessage";
 
 interface Product {
   id: string;
@@ -47,19 +48,7 @@ export const ChatHistory = ({ messages, isLoading }: ChatHistoryProps) => {
         />
       ))}
       
-      {isLoading && (
-        <div className="flex justify-start mb-8">
-          <div className="max-w-[95%] w-full">
-            <div className="bg-muted rounded-2xl rounded-tl-md px-6 py-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-muted-foreground/40 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <LoadingMessage isLoading={isLoading} />
       
       <div ref={messagesEndRef} />
     </div>
