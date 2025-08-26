@@ -73,7 +73,7 @@ export const ProductGrid = ({ products, isLoading }: ProductGridProps) => {
         >
           {/* Product Image */}
           <div 
-            className="bg-[#F2F3F5] rounded-xl mb-3 md:mb-4 flex items-center justify-center overflow-hidden"
+            className="bg-white border border-gray-200 rounded-xl mb-3 md:mb-4 flex items-center justify-center overflow-hidden"
             style={{ height: '200px' }}
           >
             <img
