@@ -12,6 +12,18 @@ import knifeSet from "@/assets/knife-set.jpg";
 import knifeSantoku from "@/assets/knife-santoku.jpg";
 import knifeBoning from "@/assets/knife-boning.jpg";
 
+// Mapping between chip display text and actual query
+const chipTextMapping: Record<string, string> = {
+  "Nuestras tiendas…": "Cuéntame la historia de vuestras tiendas",
+  "¿Dónde encontrarnos?": "¿Dónde puedo encontraros?",
+  "¿Cómo se fabrican nuestros productos?": "¿Cómo se fabrican vuestros productos?",
+  "Nuestra historia…": "Háblame de la historia de Arcos",
+  "¿Cómo empezamos?": "¿Cuáles fueron los comienzos de la marca Arcos?",
+  "¿Dónde fabricamos nuestros productos?": "¿Dónde se fabrican los productos Arcos?",
+  "Lo más premium…": "Dime los productos Arcos más premium",
+  "Nuestros últimos productos…": "Nuestros últimos productos…" // Keep as is
+};
+
 const chipData = [
   // Row 1 (slides right)
   [
@@ -74,8 +86,10 @@ const AIHeroWebchat = () => {
   };
 
   const handleChipClick = (text: string) => {
-    setInputValue(text);
-    askAssistant(text);
+    // Use the mapped query text if available, otherwise use the original text
+    const queryText = chipTextMapping[text] || text;
+    setInputValue(queryText);
+    askAssistant(queryText);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
