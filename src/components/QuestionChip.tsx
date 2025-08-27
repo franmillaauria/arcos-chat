@@ -14,13 +14,13 @@ export const QuestionChip = ({
   onClick 
 }: QuestionChipProps) => {
   const sizeClasses = {
-    md: "h-[28px] px-6 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]",
-    sm: "h-[24px] px-4 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]"
+    md: "h-[42px] px-6 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]",
+    sm: "h-[42px] px-4 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]"
   };
 
   const avatarSizes = {
-    md: "w-12 h-12", // 48px - larger than pill
-    sm: "w-10 h-10"  // 40px - larger than pill
+    md: "w-[69px] h-[69px]",
+    sm: "w-[69px] h-[69px]"
   };
 
   const variantClasses = {
