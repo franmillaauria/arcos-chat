@@ -15,36 +15,36 @@ import knifeBoning from "@/assets/knife-boning.jpg";
 const chipData = [
   // Row 1 (slides right)
   [
-    { text: "Where do we make our products", variant: "light" as const, avatarSrc: avatarFactory },
-    { text: "How did we start?", variant: "dark" as const, avatarSrc: avatarBusinessman },
-    { text: "Our latest products…", variant: "light" as const, avatarSrc: avatarCraftsman },
-    { text: "Our shops..", variant: "dark" as const, avatarSrc: avatarShop },
-    { text: "How are our products made…", variant: "light" as const, avatarSrc: avatarCraftsman },
-    { text: "Most premium…", variant: "dark" as const, avatarSrc: avatarShop },
-    { text: "Where to find us", variant: "light" as const, avatarSrc: avatarFactory },
-    { text: "Our history…", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: avatarBusinessman },
   ],
   // Row 2 (slides left)
   [
-    { text: "Most premium…", variant: "dark" as const, avatarSrc: avatarShop },
-    { text: "Where to find us", variant: "light" as const, avatarSrc: avatarFactory },
-    { text: "Our history…", variant: "dark" as const, avatarSrc: avatarBusinessman },
-    { text: "Where do we make our products", variant: "light" as const, avatarSrc: avatarFactory },
-    { text: "How did we start?", variant: "dark" as const, avatarSrc: avatarBusinessman },
-    { text: "Our latest products…", variant: "light" as const, avatarSrc: avatarCraftsman },
-    { text: "Our shops..", variant: "dark" as const, avatarSrc: avatarShop },
-    { text: "How are our products made…", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
+    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: avatarCraftsman },
+    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: avatarShop },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: avatarCraftsman },
   ],
   // Row 3 (slides right)
   [
-    { text: "Our shops..", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "How are our products made…", variant: "dark" as const, avatarSrc: avatarCraftsman },
-    { text: "Most premium…", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "Where to find us", variant: "dark" as const, avatarSrc: avatarFactory },
-    { text: "Our history…", variant: "light" as const, avatarSrc: avatarBusinessman },
-    { text: "Where do we make our products", variant: "dark" as const, avatarSrc: avatarFactory },
-    { text: "How did we start?", variant: "light" as const, avatarSrc: avatarBusinessman },
-    { text: "Our latest products…", variant: "dark" as const, avatarSrc: avatarCraftsman },
+    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: avatarShop },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: avatarCraftsman },
+    { text: "Lo más premium…", variant: "light" as const, avatarSrc: avatarShop },
+    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: avatarFactory },
+    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: avatarBusinessman },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: avatarFactory },
+    { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: avatarBusinessman },
+    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: avatarCraftsman },
   ],
 ];
 
@@ -96,8 +96,8 @@ const AIHeroWebchat = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="How can I help?"
-              aria-label="Ask our AI assistant a question"
+              placeholder="¿En qué puedo ayudarte?"
+              aria-label="Pregunta a nuestro asistente de IA"
               disabled={isLoading}
               className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
             />
@@ -112,9 +112,9 @@ const AIHeroWebchat = () => {
         {/* Title - Left Aligned */}
         <div className="mb-16">
           <h1 className="font-normal text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
-            ASK ME ANYTHING ABOUT OUR
+            PREGÚNTAME CUALQUIER COSA SOBRE
             <br />
-            PRODUCTS, AND SERVICES
+            NUESTROS PRODUCTOS Y SERVICIOS
           </h1>
         </div>
       </div>

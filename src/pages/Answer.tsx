@@ -41,28 +41,28 @@ const Answer = () => {
   const defaultProducts = [
     {
       id: "1",
-      title: "Premium Leather Wallet",
+      title: "Cartera de Cuero Premium",
       price: "129,99 €",
       image: productWallet,
       link: "/products/wallet"
     },
     {
       id: "2", 
-      title: "Artisan Watch Collection",
+      title: "Colección de Relojes Artesanales",
       price: "899,99 €",
       image: productWatch,
       link: "/products/watch"
     },
     {
       id: "3",
-      title: "Handcrafted Belt",
+      title: "Cinturón Hecho a Mano",
       price: "79,99 €", 
       image: productBelt,
       link: "/products/belt"
     },
     {
       id: "4",
-      title: "Luxury Travel Bag",
+      title: "Bolsa de Viaje de Lujo",
       price: "459,99 €", 
       image: productBag, 
       link: "/products/bag"
@@ -267,9 +267,9 @@ const Answer = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask me anything about our products..."
+                placeholder="Pregúntame sobre nuestros productos..."
                 className="min-h-[55px] h-[12px] max-h-[120px] rounded-full resize-none px-6 py-1 pr-14 text-base border-2 focus:border-primary"
-                aria-label="Ask a question about our products"
+                aria-label="Haz una pregunta sobre nuestros productos"
                 disabled={isLoading}
               />
             </div>
@@ -278,7 +278,7 @@ const Answer = () => {
               disabled={!inputValue.trim() || isLoading}
               size="lg"
               className="h-[32px] w-[32px] rounded-full p-0 flex-shrink-0"
-              aria-label="Send message"
+              aria-label="Enviar mensaje"
             >
               <Send className="h-3 w-3" />
             </Button>
