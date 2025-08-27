@@ -101,16 +101,16 @@ const AIHeroWebchat = () => {
 
   return (
     <section className="min-h-screen bg-hero-bg">
-      <div className="mx-auto max-w-[1200px] px-4 py-8 md:py-28">
+      <div className="mx-auto max-w-[1200px] px-4 py-28">
         {/* Input - Left Aligned */}
-        <div className="mb-8 md:mb-12">
+        <div className="mb-12">
           <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
             <Input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Buscar"
+              placeholder="¿En qué puedo ayudarte?"
               aria-label="Pregunta a nuestro asistente de IA"
               disabled={isLoading}
               className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
@@ -124,8 +124,8 @@ const AIHeroWebchat = () => {
         </div>
 
         {/* Title - Left Aligned */}
-        <div className="mb-8 md:mb-16">
-          <h1 className="font-normal text-2xl md:text-3xl lg:text-4xl tracking-[0.04em] uppercase text-foreground leading-tight">
+        <div className="mb-16">
+          <h1 className="font-normal text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
             PREGÚNTAME CUALQUIER COSA SOBRE
             <br />
             NUESTROS PRODUCTOS Y SERVICIOS
@@ -133,10 +133,10 @@ const AIHeroWebchat = () => {
         </div>
       </div>
 
-      {/* Desktop: Horizontal scrolling chips, Mobile: Vertical list */}
+      {/* White background section for chip rows - Full width */}
       <div className="bg-white">
-        {/* Desktop version - Hidden on mobile */}
-        <div className="hidden md:block space-y-6 overflow-hidden py-12">
+        {/* Chip Rows - Full screen width */}
+        <div className="space-y-6 overflow-hidden py-12">
           <ChipRow
             chips={chipData[0]}
             direction="right"
@@ -155,39 +155,6 @@ const AIHeroWebchat = () => {
             speed="80s"
             onChipClick={handleChipClick}
           />
-        </div>
-
-        {/* Mobile version - Vertical list */}
-        <div className="md:hidden px-4 py-8 space-y-4">
-          {chipData[0].slice(0, 6).map((chip, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <button
-                onClick={() => handleChipClick(chip.text)}
-                className={`
-                  flex-1 text-left py-4 px-6 rounded-full font-normal text-base
-                  transition-all duration-200 hover:scale-[1.02] cursor-pointer
-                  shadow-[0_2px_10px_rgba(0,0,0,0.06)]
-                  ${chip.variant === 'light' 
-                    ? 'bg-[#ECEEE8] text-foreground' 
-                    : 'bg-foreground text-background'
-                  }
-                `}
-              >
-                {chip.text}
-              </button>
-              <div className="ml-4 w-12 h-12 rounded-full border-2 border-white bg-gray-300 flex-shrink-0 overflow-hidden">
-                {chip.avatarSrc ? (
-                  <img 
-                    src={chip.avatarSrc} 
-                    alt="" 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-orange-400 to-red-500" />
-                )}
-              </div>
-            </div>
-          ))}
         </div>
       </div>
     </section>
