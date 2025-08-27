@@ -165,37 +165,46 @@ const AIHeroWebchat = () => {
           </h1>
         </div>
 
-        {/* Mobile Chip Grid - Positioned right below title on mobile */}
-        <div className="md:hidden bg-white rounded-2xl p-6 space-y-4 mb-8">
-          {chipData.slice(0, 6).map((rowChips, rowIndex) => (
-            <div key={rowIndex} className="flex flex-wrap gap-3">
-              {rowChips.slice(0, 2).map((chip, chipIndex) => (
-                <button
-                  key={`${chip.text}-${chipIndex}`}
-                  onClick={() => handleChipClick(chip.text)}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-full text-base font-medium
-                    transition-all duration-200 hover:scale-105 cursor-pointer
-                    shadow-[0_4px_14px_rgba(0,0,0,0.06)] flex-1 min-w-0
-                    ${chip.variant === "light" ? "bg-[#ECEEE8] text-foreground" : "bg-foreground text-background"}
-                  `}
-                >
-                  <span className="truncate flex-1">{chip.text}</span>
-                  <div className="w-12 h-12 rounded-full border-2 border-white bg-gray-300 flex-shrink-0 overflow-hidden">
-                    {chip.avatarSrc ? (
-                      <img 
-                        src={chip.avatarSrc} 
-                        alt="" 
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-orange-400 to-red-500" />
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          ))}
+        {/* Mobile Chip Rows - Positioned right below title on mobile */}
+        <div className="md:hidden bg-white rounded-2xl overflow-hidden mb-8">
+          <div className="space-y-4 py-8">
+            <ChipRow
+              chips={chipData[0]}
+              direction="right"
+              speed="60s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[1]}
+              direction="left"
+              speed="70s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[2]}
+              direction="right"
+              speed="80s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[3]}
+              direction="left"
+              speed="65s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[4]}
+              direction="right"
+              speed="75s"
+              onChipClick={handleChipClick}
+            />
+            <ChipRow
+              chips={chipData[5]}
+              direction="left"
+              speed="85s"
+              onChipClick={handleChipClick}
+            />
+          </div>
         </div>
       </div>
 
