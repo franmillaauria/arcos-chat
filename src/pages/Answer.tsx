@@ -268,7 +268,7 @@ const Answer = () => {
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Pregúntame sobre nuestros productos..."
-                className="min-h-[55px] h-[12px] max-h-[120px] rounded-full resize-none px-6 py-1 pr-14 text-[22px] font-inter font-normal leading-[100%] tracking-[0%] border-2 focus:border-primary"
+                className="min-h-[55px] h-[55px] max-h-[120px] rounded-full resize-none px-6 py-4 pr-14 text-[16px] font-inter font-normal leading-[130%] tracking-[0%] border-2 focus:border-primary flex items-center"
                 aria-label="Haz una pregunta sobre nuestros productos"
                 disabled={isLoading}
               />
