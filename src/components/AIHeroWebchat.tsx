@@ -220,24 +220,6 @@ const AIHeroWebchat = () => {
             speed="80s"
             onChipClick={handleChipClick}
           />
-          <ChipRow
-            chips={chipData[3]}
-            direction="left"
-            speed="65s"
-            onChipClick={handleChipClick}
-          />
-          <ChipRow
-            chips={chipData[4]}
-            direction="right"
-            speed="75s"
-            onChipClick={handleChipClick}
-          />
-          <ChipRow
-            chips={chipData[5]}
-            direction="left"
-            speed="85s"
-            onChipClick={handleChipClick}
-          />
         </div>
       </div>
     </section>
