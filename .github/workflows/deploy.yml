@@ -22,7 +22,8 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build                 # Vite -> ./dist
+      - run: npm i --no-save react-router-dom   # 👈 instala para el build
+      - run: npm run build
       - run: |
           touch dist/.nojekyll
           cp dist/index.html dist/404.html
