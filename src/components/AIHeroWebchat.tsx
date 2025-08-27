@@ -146,7 +146,7 @@ const AIHeroWebchat = () => {
               placeholder="¿En qué puedo ayudarte?"
               aria-label="Pregunta a nuestro asistente de IA"
               disabled={isLoading}
-              className="h-[66px] w-full rounded-[88px] border-0 bg-white px-8 text-[22px] font-inter font-normal leading-[100%] tracking-[0%] shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-[22px] placeholder:font-inter placeholder:font-normal placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
+              className="h-[66px] w-full rounded-[88px] border-0 bg-white px-8 text-[14px] md:text-[22px] font-inter font-normal leading-[100%] tracking-[0%] shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-[14px] md:placeholder:text-[22px] placeholder:font-inter placeholder:font-normal placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
             />
             {isLoading && (
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -158,7 +158,7 @@ const AIHeroWebchat = () => {
 
         {/* Title - Left Aligned */}
         <div className="mb-8 md:mb-16 max-w-[700px]">
-          <h1 className="font-gt-pressura font-normal text-[33px] leading-[39px] tracking-[0%] uppercase text-foreground">
+          <h1 className="font-gt-pressura font-normal text-[22px] leading-[24px] md:text-[33px] md:leading-[39px] tracking-[0%] uppercase text-foreground">
             PREGÚNTAME CUALQUIER COSA SOBRE
             <br />
             NUESTROS PRODUCTOS Y SERVICIOS

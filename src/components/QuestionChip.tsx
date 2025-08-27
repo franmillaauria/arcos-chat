@@ -14,8 +14,8 @@ export const QuestionChip = ({
   onClick 
 }: QuestionChipProps) => {
   const sizeClasses = {
-    md: "h-[42px] px-6 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]",
-    sm: "h-[42px] px-4 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]"
+    md: "h-[42px] px-6 text-[16px] md:text-[22px] font-inter font-normal leading-[100%] tracking-[0%]",
+    sm: "h-[42px] px-4 text-[16px] md:text-[22px] font-inter font-normal leading-[100%] tracking-[0%]"
   };
 
   const avatarSizes = {
