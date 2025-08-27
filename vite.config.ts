@@ -1,18 +1,22 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
+import { componentTagger } from 'lovable-tagger'
 
+// Publica en https://franmillaauria.github.io/arcos-chat/
 export default defineConfig({
-  plugins: [react()],
-  // IMPORTANTE: el nombre del repo, con barra inicial y final
-  base: '/arcos-chat/',
+  server: {
+    port: 8080
+  },
+  plugins: [
+    react(),
+    componentTagger()
+  ],
+  base: '/arcos-chat/',   // ← ruta base = nombre del repo
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  // (opcional; por defecto ya es 'dist')
-  build: {
-    outDir: 'dist',
-  },
+  build: { outDir: 'docs' } // ← generaremos el build en /docs
 })
