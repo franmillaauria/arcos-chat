@@ -22,13 +22,14 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      - run: npm run build            # Vite genera ./docs
+      - run: npm run build                 # Vite genera ./dist
       - run: |
-          touch docs/.nojekyll        # evita problemas con Jekyll
-          cp docs/index.html docs/404.html  # fallback SPA
+          touch dist/.nojekyll             # evita problemas con Jekyll
+          cp dist/index.html dist/404.html # fallback SPA
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: dist                       # 👈 importante
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
