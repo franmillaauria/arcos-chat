@@ -146,7 +146,7 @@ const AIHeroWebchat = () => {
               placeholder="¿En qué puedo ayudarte?"
               aria-label="Pregunta a nuestro asistente de IA"
               disabled={isLoading}
-              className="h-[66px] w-full rounded-[88px] border-0 bg-white px-8 text-[22px] font-inter font-normal leading-[100%] tracking-[0%] shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
+              className="h-[66px] w-full rounded-[88px] border-0 bg-white px-8 text-[22px] font-inter font-normal leading-[100%] tracking-[0%] shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-[22px] placeholder:font-inter placeholder:font-normal placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
             />
             {isLoading && (
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
