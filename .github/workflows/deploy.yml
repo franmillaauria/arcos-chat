@@ -28,7 +28,7 @@ jobs:
           cp dist/index.html dist/404.html # fallback SPA
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist                       # 👈 importante
+          path: dist                       # 👈 publicamos dist
 
   deploy:
     needs: build
