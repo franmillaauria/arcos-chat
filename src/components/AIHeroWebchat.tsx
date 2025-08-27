@@ -92,7 +92,7 @@ const AIHeroWebchat = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const N8N_WEBHOOK_URL = "https://n8n.helloauria.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
+  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
 
   const askAssistant = async (question: string) => {
     if (!question.trim()) return;
