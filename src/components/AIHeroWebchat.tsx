@@ -58,39 +58,6 @@ const chipData = [
     { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: avatarCraftsman },
   ],
-  // Row 4 (slides left)
-  [
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: avatarFactory },
-    { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: avatarBusinessman },
-    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: avatarCraftsman },
-    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: avatarCraftsman },
-    { text: "Lo más premium…", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: avatarFactory },
-    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: avatarBusinessman },
-  ],
-  // Row 5 (slides right)
-  [
-    { text: "Lo más premium…", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: avatarFactory },
-    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: avatarBusinessman },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: avatarFactory },
-    { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: avatarBusinessman },
-    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: avatarCraftsman },
-    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: avatarCraftsman },
-  ],
-  // Row 6 (slides left)
-  [
-    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: avatarShop },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: avatarCraftsman },
-    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: avatarShop },
-    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: avatarFactory },
-    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: avatarBusinessman },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
-    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
-    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: avatarCraftsman },
-  ],
 ];
 
 const AIHeroWebchat = () => {
@@ -134,132 +101,60 @@ const AIHeroWebchat = () => {
 
   return (
     <section className="min-h-screen bg-hero-bg">
-      {/* Desktop version */}
-      <div className="hidden md:block">
-        <div className="mx-auto max-w-[1200px] px-4 py-28">
-          {/* Input - Left Aligned */}
-          <div className="mb-12">
-            <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
-              <Input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="¿En qué puedo ayudarte?"
-                aria-label="Pregunta a nuestro asistente de IA"
-                disabled={isLoading}
-                className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
-              />
-              {isLoading && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                </div>
-              )}
-            </form>
-          </div>
-
-          {/* Title - Left Aligned */}
-          <div className="mb-16">
-            <h1 className="font-normal text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
-              PREGÚNTAME CUALQUIER COSA SOBRE
-              <br />
-              NUESTROS PRODUCTOS Y SERVICIOS
-            </h1>
-          </div>
+      <div className="mx-auto max-w-[1200px] px-4 py-28">
+        {/* Input - Left Aligned */}
+        <div className="mb-12">
+          <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
+            <Input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="¿En qué puedo ayudarte?"
+              aria-label="Pregunta a nuestro asistente de IA"
+              disabled={isLoading}
+              className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
+            />
+            {isLoading && (
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+              </div>
+            )}
+          </form>
         </div>
 
-        {/* White background section for chip rows - Full width */}
-        <div className="bg-white">
-          {/* Chip Rows - Full screen width */}
-          <div className="space-y-6 overflow-hidden py-12">
-            <ChipRow
-              chips={chipData[0]}
-              direction="right"
-              speed="60s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[1]}
-              direction="left"
-              speed="70s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[2]}
-              direction="right"
-              speed="80s"
-              onChipClick={handleChipClick}
-            />
-          </div>
+        {/* Title - Left Aligned */}
+        <div className="mb-16">
+          <h1 className="font-normal text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
+            PREGÚNTAME CUALQUIER COSA SOBRE
+            <br />
+            NUESTROS PRODUCTOS Y SERVICIOS
+          </h1>
         </div>
       </div>
 
-      {/* Mobile version */}
-      <div className="md:hidden">
-        <div className="px-6 py-12">
-          {/* Input - Mobile */}
-          <div className="mb-8">
-            <form onSubmit={handleSubmit} className="relative w-full">
-              <Input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Buscar"
-                aria-label="Pregunta a nuestro asistente de IA"
-                disabled={isLoading}
-                className="h-[60px] w-full rounded-full border-0 bg-white px-6 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
-              />
-              {isLoading && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-                </div>
-              )}
-            </form>
-          </div>
-
-          {/* Title - Mobile */}
-          <div className="mb-8">
-            <h1 className="font-normal text-2xl tracking-[0.04em] uppercase text-foreground leading-tight">
-              PREGÚNTAME CUALQUIER COSA SOBRE
-              <br />
-              NUESTROS PRODUCTOS Y SERVICIOS
-            </h1>
-          </div>
-
-          {/* Mobile Pills - Vertical list right below title */}
-          <div className="space-y-4">
-            {chipData.slice(0, 6).map((rowChips, rowIndex) => (
-              <div key={rowIndex} className="space-y-4">
-                {rowChips.slice(0, 4).map((chip, chipIndex) => (
-                  <div key={`${rowIndex}-${chipIndex}`} className="flex items-center justify-between w-full">
-                    <button
-                      onClick={() => handleChipClick(chip.text)}
-                      className={`
-                        flex-1 text-left px-6 py-4 rounded-full font-medium text-lg
-                        transition-all duration-200 hover:scale-105 cursor-pointer
-                        shadow-[0_4px_14px_rgba(0,0,0,0.06)]
-                        ${chip.variant === "light" ? "bg-[#ECEEE8] text-foreground" : "bg-foreground text-background"}
-                      `}
-                    >
-                      {chip.text}
-                    </button>
-                    <div className="w-16 h-16 rounded-full border-2 border-white bg-gray-300 flex-shrink-0 overflow-hidden ml-4">
-                      {chip.avatarSrc ? (
-                        <img 
-                          src={chip.avatarSrc} 
-                          alt="" 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-orange-400 to-red-500" />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+      {/* White background section for chip rows - Full width */}
+      <div className="bg-white">
+        {/* Chip Rows - Full screen width */}
+        <div className="space-y-6 overflow-hidden py-12">
+          <ChipRow
+            chips={chipData[0]}
+            direction="right"
+            speed="60s"
+            onChipClick={handleChipClick}
+          />
+          <ChipRow
+            chips={chipData[1]}
+            direction="left"
+            speed="70s"
+            onChipClick={handleChipClick}
+          />
+          <ChipRow
+            chips={chipData[2]}
+            direction="right"
+            speed="80s"
+            onChipClick={handleChipClick}
+          />
         </div>
       </div>
     </section>
