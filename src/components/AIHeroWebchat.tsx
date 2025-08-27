@@ -27,7 +27,7 @@ const chipTextMapping: Record<string, string> = {
 const chipData = [
   // Row 1 (slides right)
   [
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: avatarCraftsman },
     { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: avatarShop },
@@ -41,7 +41,7 @@ const chipData = [
     { text: "Lo más premium…", variant: "dark" as const, avatarSrc: avatarShop },
     { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: avatarFactory },
     { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: avatarBusinessman },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: avatarCraftsman },
     { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: avatarShop },
@@ -54,7 +54,7 @@ const chipData = [
     { text: "Lo más premium…", variant: "light" as const, avatarSrc: avatarShop },
     { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: avatarFactory },
     { text: "Nuestra historia…", variant: "light" as const, avatarSrc: avatarBusinessman },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: avatarFactory },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
     { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: avatarCraftsman },
   ],
@@ -62,7 +62,7 @@ const chipData = [
   [
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: avatarShop },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: avatarFactory },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
     { text: "Lo más premium…", variant: "light" as const, avatarSrc: avatarShop },
     { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: avatarCraftsman },
@@ -75,7 +75,7 @@ const chipData = [
     { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: avatarCraftsman },
     { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: avatarCraftsman },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "Lo más premium…", variant: "light" as const, avatarSrc: avatarShop },
     { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: avatarShop },
@@ -83,7 +83,7 @@ const chipData = [
   // Row 6 (slides left)
   [
     { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: avatarCraftsman },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: avatarFactory },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: avatarBusinessman },
     { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: avatarShop },
     { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: avatarCraftsman },
