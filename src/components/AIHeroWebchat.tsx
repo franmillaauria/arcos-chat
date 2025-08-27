@@ -3,14 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { ChipRow } from "./ChipRow";
 import { useToast } from "@/hooks/use-toast";
-import avatarBusinessman from "@/assets/avatar-businessman.jpg";
-import avatarCraftsman from "@/assets/avatar-craftsman.jpg";
-import avatarFactory from "@/assets/avatar-factory.jpg";
-import avatarShop from "@/assets/avatar-shop.jpg";
-import knifeChef from "@/assets/knife-chef.jpg";
-import knifeSet from "@/assets/knife-set.jpg";
-import knifeSantoku from "@/assets/knife-santoku.jpg";
-import knifeBoning from "@/assets/knife-boning.jpg";
+import { asset } from "@/lib/asset";
 
 // Mapping between chip display text and actual query
 const chipTextMapping: Record<string, string> = {
@@ -27,69 +20,69 @@ const chipTextMapping: Record<string, string> = {
 const chipData = [
   // Row 1 (slides right)
   [
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
-    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png" },
-    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: "/lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png" },
-    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: "/lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png" },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png" },
-    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: "/lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png" },
-    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: "/lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png" },
-    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: "/lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png" },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
+    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
+    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
+    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
+    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
+    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
   ],
   // Row 2 (slides left)
   [
-    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: "/lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png" },
-    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: "/lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png" },
-    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: "/lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png" },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
-    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png" },
-    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: "/lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png" },
-    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: "/lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png" },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png" },
+    { text: "Lo más premium…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
+    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
+    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
+    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
+    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
   ],
   // Row 3 (slides right)
   [
-    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: "/lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png" },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png" },
-    { text: "Lo más premium…", variant: "light" as const, avatarSrc: "/lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png" },
-    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png" },
-    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: "/lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png" },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
-    { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: "/lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png" },
-    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: "/lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png" },
+    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
+    { text: "Lo más premium…", variant: "light" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
+    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
+    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
+    { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
+    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
   ],
   // Row 4 (slides left)
   [
-    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png" },
-    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: "/lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png" },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
-    { text: "Lo más premium…", variant: "light" as const, avatarSrc: "/lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png" },
-    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: "/lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png" },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png" },
-    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png" },
-    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: "/lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png" },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
+    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
+    { text: "Lo más premium…", variant: "light" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
+    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
+    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
+    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
   ],
   // Row 5 (slides right)
   [
-    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: "/lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png" },
-    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: "/lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png" },
-    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: "/lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png" },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png" },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
-    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png" },
-    { text: "Lo más premium…", variant: "light" as const, avatarSrc: "/lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png" },
-    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: "/lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png" },
+    { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
+    { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
+    { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
+    { text: "Lo más premium…", variant: "light" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
+    { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
   ],
   // Row 6 (slides left)
   [
-    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: "/lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png" },
-    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: "/lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png" },
-    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png" },
-    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: "/lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png" },
-    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png" },
-    { text: "Lo más premium…", variant: "light" as const, avatarSrc: "/lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png" },
-    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: "/lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png" },
-    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: "/lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png" },
+    { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
+    { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
+    { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
+    { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
+    { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
+    { text: "Lo más premium…", variant: "light" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
+    { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
+    { text: "Nuestra historia…", variant: "light" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
   ],
 ];
 
@@ -103,13 +96,12 @@ const AIHeroWebchat = () => {
 
   const askAssistant = async (question: string) => {
     if (!question.trim()) return;
-    
-    // Navigate immediately to answer page with the question
-    navigate("/answer", { 
-      state: { 
+
+    navigate("/answer", {
+      state: {
         question: question,
         isLoading: true
-      } 
+      }
     });
   };
 
@@ -119,7 +111,6 @@ const AIHeroWebchat = () => {
   };
 
   const handleChipClick = (text: string) => {
-    // Use the mapped query text if available, otherwise use the original text
     const queryText = chipTextMapping[text] || text;
     setInputValue(queryText);
     askAssistant(queryText);
@@ -165,70 +156,25 @@ const AIHeroWebchat = () => {
           </h1>
         </div>
 
-        {/* Mobile Chip Rows - Positioned right below title on mobile */}
+        {/* Mobile Chip Rows */}
         <div className="md:hidden bg-white rounded-2xl overflow-hidden mb-8">
           <div className="space-y-4 py-8">
-            <ChipRow
-              chips={chipData[0]}
-              direction="right"
-              speed="60s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[1]}
-              direction="left"
-              speed="70s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[2]}
-              direction="right"
-              speed="80s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[3]}
-              direction="left"
-              speed="65s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[4]}
-              direction="right"
-              speed="75s"
-              onChipClick={handleChipClick}
-            />
-            <ChipRow
-              chips={chipData[5]}
-              direction="left"
-              speed="85s"
-              onChipClick={handleChipClick}
-            />
+            <ChipRow chips={chipData[0]} direction="right" speed="60s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[1]} direction="left"  speed="70s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[2]} direction="right" speed="80s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[3]} direction="left"  speed="65s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[4]} direction="right" speed="75s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[5]} direction="left"  speed="85s" onChipClick={handleChipClick} />
           </div>
         </div>
       </div>
 
-      {/* Desktop Chip Rows - Full width, hidden on mobile */}
+      {/* Desktop Chip Rows */}
       <div className="hidden md:block bg-white">
         <div className="space-y-6 overflow-hidden py-12">
-          <ChipRow
-            chips={chipData[0]}
-            direction="right"
-            speed="60s"
-            onChipClick={handleChipClick}
-          />
-          <ChipRow
-            chips={chipData[1]}
-            direction="left"
-            speed="70s"
-            onChipClick={handleChipClick}
-          />
-          <ChipRow
-            chips={chipData[2]}
-            direction="right"
-            speed="80s"
-            onChipClick={handleChipClick}
-          />
+          <ChipRow chips={chipData[0]} direction="right" speed="60s" onChipClick={handleChipClick} />
+          <ChipRow chips={chipData[1]} direction="left"  speed="70s" onChipClick={handleChipClick} />
+          <ChipRow chips={chipData[2]} direction="right" speed="80s" onChipClick={handleChipClick} />
         </div>
       </div>
     </section>
