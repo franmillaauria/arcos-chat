@@ -14,8 +14,8 @@ export const QuestionChip = ({
   onClick 
 }: QuestionChipProps) => {
   const sizeClasses = {
-    md: "h-[28px] px-6 text-base", // Even smaller than 48px avatar
-    sm: "h-[24px] px-4 text-sm"    // Even smaller than 40px avatar
+    md: "h-[28px] px-6 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]",
+    sm: "h-[24px] px-4 text-[22px] font-inter font-normal leading-[100%] tracking-[0%]"
   };
 
   const avatarSizes = {

@@ -36,7 +36,7 @@ export const ChatMessage = ({ type, message, products, closing, timestamp }: Cha
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-md px-6 py-4">
           {/* Message text */}
           <div className="prose prose-lg max-w-none mb-4">
-            <p className="text-[18px] leading-[1.6] text-foreground m-0">
+            <p className="text-[22px] font-inter font-normal leading-[100%] tracking-[0%] text-foreground m-0">
               {message}
             </p>
           </div>
@@ -51,7 +51,7 @@ export const ChatMessage = ({ type, message, products, closing, timestamp }: Cha
           {/* Closing message */}
           {closing && (
             <div className="mb-4">
-              <p className="text-[18px] leading-[1.6] text-foreground m-0">
+              <p className="text-[22px] font-inter font-normal leading-[100%] tracking-[0%] text-foreground m-0">
                 {closing}
               </p>
             </div>

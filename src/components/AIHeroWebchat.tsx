@@ -137,7 +137,7 @@ const AIHeroWebchat = () => {
       <div className="mx-auto max-w-[1200px] px-4 py-28">
         {/* Input - Left Aligned */}
         <div className="mb-12">
-          <form onSubmit={handleSubmit} className="relative w-full max-w-2xl">
+          <form onSubmit={handleSubmit} className="relative w-full max-w-[751px]">
             <Input
               type="text"
               value={inputValue}
@@ -146,7 +146,7 @@ const AIHeroWebchat = () => {
               placeholder="¿En qué puedo ayudarte?"
               aria-label="Pregunta a nuestro asistente de IA"
               disabled={isLoading}
-              className="h-[68px] w-full rounded-full border-0 bg-white px-8 text-lg font-medium shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
+              className="h-[66px] w-full rounded-[88px] border-0 bg-white px-8 text-[22px] font-inter font-normal leading-[100%] tracking-[0%] shadow-[0_4px_20px_rgba(0,0,0,0.08)] placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
             />
             {isLoading && (
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -157,8 +157,8 @@ const AIHeroWebchat = () => {
         </div>
 
         {/* Title - Left Aligned */}
-        <div className="mb-8 md:mb-16">
-          <h1 className="font-normal text-3xl tracking-[0.04em] uppercase text-foreground md:text-4xl">
+        <div className="mb-8 md:mb-16 max-w-[516px]">
+          <h1 className="font-gt-pressura font-normal text-[33px] leading-[39px] tracking-[0%] uppercase text-foreground">
             PREGÚNTAME CUALQUIER COSA SOBRE
             <br />
             NUESTROS PRODUCTOS Y SERVICIOS
