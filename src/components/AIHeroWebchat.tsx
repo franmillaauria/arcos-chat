@@ -22,9 +22,6 @@ const getSessionId = (): string => {
 const getCurrentUrl = (): string | null =>
   typeof window === "undefined" ? null : window.location.href;
 
-const genRequestId = (): string =>
-  (globalThis.crypto?.randomUUID?.() ?? ("req_" + Math.random().toString(36).slice(2, 12)));
-
 // Mapping between chip display text and actual query
 const chipTextMapping: Record<string, string> = {
   "Nuestras tiendas…": "Cuéntame la historia de vuestras tiendas",
@@ -38,7 +35,7 @@ const chipTextMapping: Record<string, string> = {
 };
 
 const chipData = [
-  // (tu chipData original completo, sin tocar)
+  // Row 1 (slides right)
   [
     { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
@@ -49,6 +46,7 @@ const chipData = [
     { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
     { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
   ],
+  // Row 2 (slides left)
   [
     { text: "Lo más premium…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
     { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
@@ -59,6 +57,7 @@ const chipData = [
     { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
     { text: "¿Cómo se fabrican nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
   ],
+  // Row 3 (slides right)
   [
     { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
     { text: "¿Cómo se fabrican nuestros productos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/c5dc4a52-ece1-4b37-8247-54818ec4948f.png") },
@@ -69,6 +68,7 @@ const chipData = [
     { text: "¿Cómo empezamos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
     { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
   ],
+  // Row 4 (slides left)
   [
     { text: "¿Cómo empezamos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/fed6f395-12cd-45b5-8b61-b048abc7fca4.png") },
     { text: "Nuestras tiendas…", variant: "light" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
@@ -79,6 +79,7 @@ const chipData = [
     { text: "¿Dónde encontrarnos?", variant: "dark" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
     { text: "Nuestros últimos productos…", variant: "light" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
   ],
+  // Row 5 (slides right)
   [
     { text: "¿Dónde encontrarnos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/be99c701-7ad3-47cc-86ab-8b00aa7af2da.png") },
     { text: "Nuestra historia…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/9c0dfb20-3fcc-48ad-af29-b32af7cd9161.png") },
@@ -89,6 +90,7 @@ const chipData = [
     { text: "Lo más premium…", variant: "light" as const, avatarSrc: asset("lovable-uploads/d304a647-7a86-4f0c-9674-bb4ab4e9be51.png") },
     { text: "Nuestras tiendas…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/54841983-2b4e-43d0-b761-bf2e607a0f15.png") },
   ],
+  // Row 6 (slides left)
   [
     { text: "Nuestros últimos productos…", variant: "dark" as const, avatarSrc: asset("lovable-uploads/0b98bdbd-6f9b-4110-87d0-63635492e64a.png") },
     { text: "¿Dónde fabricamos nuestros productos?", variant: "light" as const, avatarSrc: asset("lovable-uploads/59fc1896-4cf4-4794-8db3-c3f33cc9d40c.png") },
@@ -103,52 +105,29 @@ const chipData = [
 
 const AIHeroWebchat = () => {
   const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false); // solo para deshabilitar input si quieres
   const formRef = useRef<HTMLFormElement>(null);
-  const submittingRef = useRef(false); // guard anti-doble envío
+  const navigatingRef = useRef(false); // guard anti-doble navegación
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
-
-  const askAssistant = async (question: string) => {
+  const askAssistant = (question: string) => {
     if (!question.trim()) return;
-    if (submittingRef.current) return; // evita doble llamada por eventos solapados
-    submittingRef.current = true;
+    if (navigatingRef.current) return;
+    navigatingRef.current = true;
 
     const sessionId = getSessionId();
     const currentUrl = getCurrentUrl();
-    const requestId = genRequestId();
 
-    setIsLoading(true);
-    try {
-      await fetch(N8N_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Request-Id": requestId },
-        body: JSON.stringify({
-          requestId,          // <-- idempotencia en n8n
-          question,
-          sessionId,
-          currentUrl,
-          source: "web_chat",
-          ts: new Date().toISOString(),
-        }),
-      });
-    } catch (err) {
-      console.error("Error calling webhook:", err);
-      toast({
-        title: "No he podido contactar con el asistente",
-        description: "Inténtalo de nuevo en unos segundos.",
-        variant: "destructive",
-      });
-    } finally {
-      navigate("/answer", {
-        state: { question, isLoading: true, sessionId, currentUrl, requestId },
-      });
-      setIsLoading(false);
-      // libera el guard un pelín después para evitar dobles Enter
-      setTimeout(() => { submittingRef.current = false; }, 300);
-    }
+    // Solo navegamos; /answer hará la llamada al webhook
+    navigate("/answer", {
+      state: {
+        question,
+        isLoading: true,
+        sessionId,
+        currentUrl,
+      },
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -156,11 +135,10 @@ const AIHeroWebchat = () => {
     askAssistant(inputValue);
   };
 
-  // ⚠️ Importante: NO llamar a askAssistant aquí
+  // NO llamamos a askAssistant aquí; solo disparamos submit del form
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      // dispara el submit de forma controlada → un solo camino
       formRef.current?.requestSubmit();
     }
   };
@@ -168,7 +146,6 @@ const AIHeroWebchat = () => {
   const handleChipClick = (text: string) => {
     const queryText = chipTextMapping[text] || text;
     setInputValue(queryText);
-    // aquí sí podemos llamar directo (no hay submit)
     askAssistant(queryText);
   };
 
@@ -182,7 +159,7 @@ const AIHeroWebchat = () => {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown} // ya no llama a askAssistant
+              onKeyDown={handleKeyDown}
               placeholder="¿En qué puedo ayudarte?"
               aria-label="Pregunta a nuestro asistente de IA"
               disabled={isLoading}
