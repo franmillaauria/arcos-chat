@@ -59,37 +59,13 @@ const Answer = () => {
 
   // Default products to show
   const defaultProducts = [
-    {
-      id: "1",
-      title: "Cartera de Cuero Premium",
-      price: "129,99 €",
-      image: productWallet,
-      link: "/products/wallet"
-    },
-    {
-      id: "2",
-      title: "Colección de Relojes Artesanales",
-      price: "899,99 €",
-      image: productWatch,
-      link: "/products/watch"
-    },
-    {
-      id: "3",
-      title: "Cinturón Hecho a Mano",
-      price: "79,99 €",
-      image: productBelt,
-      link: "/products/belt"
-    },
-    {
-      id: "4",
-      title: "Bolsa de Viaje de Lujo",
-      price: "459,99 €",
-      image: productBag,
-      link: "/products/bag"
-    }
+    { id: "1", title: "Cartera de Cuero Premium", price: "129,99 €", image: productWallet, link: "/products/wallet" },
+    { id: "2", title: "Colección de Relojes Artesanales", price: "899,99 €", image: productWatch, link: "/products/watch" },
+    { id: "3", title: "Cinturón Hecho a Mano", price: "79,99 €", image: productBelt, link: "/products/belt" },
+    { id: "4", title: "Bolsa de Viaje de Lujo", price: "459,99 €", image: productBag, link: "/products/bag" }
   ];
 
-  // Lanzar la llamada SOLO desde /answer (ya no desde la home)
+  // Lanzar la llamada SOLO desde /answer
   useEffect(() => {
     const question = location.state?.question as string | undefined;
     const navigationLoading = !!location.state?.isLoading;
@@ -97,7 +73,7 @@ const Answer = () => {
     const navCurrentUrl = location.state?.currentUrl as string | null | undefined;
 
     if (question) {
-      // Pintamos el mensaje del usuario
+      // Mensaje del usuario
       const userMessage: ChatMessageData = {
         id: 'user_' + Date.now().toString(),
         type: 'user',
@@ -106,7 +82,6 @@ const Answer = () => {
       };
       setMessages([userMessage]);
 
-      // Si la home indicó isLoading=true, hacemos la llamada aquí
       if (navigationLoading) {
         setIsLoading(true);
         handleApiCall(question, {
@@ -115,10 +90,10 @@ const Answer = () => {
         });
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // 🔁 ÚNICA función que llama al webhook — cuerpo estructurado
+  // ÚNICA función que llama al webhook — body estructurado
   const handleApiCall = async (
     question: string,
     meta?: { sessionId?: string | null; currentUrl?: string | null }
@@ -128,6 +103,18 @@ const Answer = () => {
       const currentUrl = meta?.currentUrl ?? getCurrentUrl();
       const requestId = genRequestId();
 
+      const body = {
+        requestId,
+        question,
+        sessionId,
+        currentUrl,
+        source: "web_chat",
+        ts: new Date().toISOString(),
+      };
+
+      // Debug opcional:
+      // console.log("Webhook body →", body);
+
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
@@ -135,24 +122,13 @@ const Answer = () => {
           "Accept": "application/json",
           "X-Request-Id": requestId,
         },
-        body: JSON.stringify({
-          requestId,             // ✅ nuevo
-          question,              // ✅ en vez de { text: question }
-          sessionId,             // ✅ nuevo
-          currentUrl,            // ✅ nuevo
-          source: "web_chat",    // ✅ nuevo
-          ts: new Date().toISOString(), // ✅ nuevo
-        }),
+        body: JSON.stringify(body),
       });
 
-      if (!response.ok) {
-        throw new Error(`Error del servidor: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`Error del servidor: ${response.status}`);
 
       const responseText = await response.text();
-      if (!responseText.trim()) {
-        throw new Error("El webhook no devolvió respuesta");
-      }
+      if (!responseText.trim()) throw new Error("El webhook no devolvió respuesta");
 
       let result: any;
       try {
@@ -164,19 +140,13 @@ const Answer = () => {
 
       // Normaliza {output: {...}} o array con output
       let output: any;
-      if (result?.output) {
-        output = result.output;
-      } else if (Array.isArray(result) && result[0]?.output) {
-        output = result[0].output;
-      } else {
-        output = result;
-      }
+      if (result?.output) output = result.output;
+      else if (Array.isArray(result) && result[0]?.output) output = result[0].output;
+      else output = result;
 
-      if (!output) {
-        throw new Error("Respuesta inválida del servidor - no se encontró output");
-      }
+      if (!output) throw new Error("Respuesta inválida del servidor - no se encontró output");
 
-      // Transform products to match internal format
+      // Transform products
       const transformedProducts: Product[] =
         output.products?.map((product: any, index: number) => ({
           id: `${index + 1}`,
@@ -186,12 +156,11 @@ const Answer = () => {
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
         })) || [];
 
-      // Add assistant response to chat
       const assistantMessage: ChatMessageData = {
         id: Date.now().toString() + '_response',
         type: 'assistant',
         message: output.response || output.answer || output.text || `Respuesta a: "${question}"`,
-        products: transformedProducts.length > 0 ? transformedProducts : undefined,
+        products: transformedProducts.length > 0 ? transformedProducts : defaultProducts,
         closing: output.closing,
         timestamp: new Date()
       };
@@ -199,24 +168,14 @@ const Answer = () => {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (err: any) {
       console.error("Error calling n8n webhook:", err);
-
       let errorMessage = "No se pudo conectar con el asistente.";
-      if (err.name === 'AbortError') {
-        errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
-      } else if (err.message?.includes('Failed to fetch')) {
-        errorMessage = "Error de conexión. Verifica tu conexión a internet.";
-      } else if (err.message?.includes('webhook')) {
-        errorMessage = "El asistente no está disponible temporalmente.";
-      } else {
-        errorMessage = err.message || "Error desconocido al conectar con el asistente.";
-      }
+      if (err.name === 'AbortError') errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
+      else if (err.message?.includes('Failed to fetch')) errorMessage = "Error de conexión. Verifica tu conexión a internet.";
+      else if (err.message?.includes('webhook')) errorMessage = "El asistente no está disponible temporalmente.";
+      else errorMessage = err.message || "Error desconocido al conectar con el asistente.";
 
       setError(errorMessage);
-      toast({
-        title: "Error de conexión",
-        description: errorMessage,
-        variant: "destructive"
-      });
+      toast({ title: "Error de conexión", description: errorMessage, variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
@@ -240,7 +199,7 @@ const Answer = () => {
     setIsLoading(true);
     setError(null);
 
-    // Llamada con body estructurado para mensajes posteriores también
+    // Llamada con body estructurado para mensajes posteriores
     const navSessionId = location.state?.sessionId as string | undefined;
     const navCurrentUrl = location.state?.currentUrl as string | null | undefined;
 
@@ -270,12 +229,7 @@ const Answer = () => {
           )}
 
           {/* Chat History */}
-          <div 
-            className="mb-12"
-            role="main"
-            aria-live="polite"
-            aria-label="Chat Conversation"
-          >
+          <div className="mb-12" role="main" aria-live="polite" aria-label="Chat Conversation">
             {messages.length === 0 && !isLoading ? (
               <div className="text-center text-muted-foreground py-12">
                 <p>¡Hola! Pregúntame lo que quieras sobre nuestros productos.</p>
@@ -287,7 +241,7 @@ const Answer = () => {
         </div>
       </main>
 
-      {/* Fixed Bottom Input - Simple without translucent background */}
+      {/* Fixed Bottom Input */}
       <div className="fixed bottom-0 left-0 right-0 bg-background">
         <div className="mx-auto max-w-2xl px-4 py-3 pb-4">
           <div className="flex gap-3 items-center">
