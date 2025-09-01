@@ -1,6 +1,6 @@
 import { ProductGrid } from "@/components/ProductGrid";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
 
 interface Product {
   id: string;
@@ -12,9 +12,9 @@ interface Product {
 
 interface ChatMessageProps {
   type: "user" | "assistant";
-  message: string;         // Puede venir en Markdown
+  message: string;   // ahora admite HTML
   products?: Product[];
-  closing?: string;        // También admite Markdown
+  closing?: string;  // también admite HTML
   timestamp: Date;
 }
 
@@ -38,22 +38,24 @@ export const ChatMessage = ({
     );
   }
 
+  // Sanear y parsear HTML de la IA
+  const cleanHtml = DOMPurify.sanitize(message, { USE_PROFILES: { html: true } });
+  const cleanClosing = closing
+    ? DOMPurify.sanitize(closing, { USE_PROFILES: { html: true } })
+    : null;
+
+  // Forzar que los enlaces abran en nueva pestaña
+  const withAnchorAttrs = (html: string) =>
+    html.replaceAll("<a ", '<a target="_blank" rel="noopener noreferrer" ');
+
   return (
     <div className="flex justify-start mb-8">
       <div className="max-w-[95%] w-full">
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-md px-6 py-4">
-          {/* Mensaje (Markdown) */}
-          <ReactMarkdown
-            className="prose prose-lg dark:prose-invert max-w-none mb-4"
-            remarkPlugins={[remarkGfm]}
-            components={{
-              a: ({ node, ...props }) => (
-                <a {...props} target="_blank" rel="noopener noreferrer" />
-              ),
-            }}
-          >
-            {message}
-          </ReactMarkdown>
+          {/* Mensaje (HTML seguro) */}
+          <div className="prose prose-lg dark:prose-invert max-w-none mb-4">
+            {parse(withAnchorAttrs(cleanHtml))}
+          </div>
 
           {/* Productos */}
           {products && products.length > 0 && (
@@ -62,19 +64,11 @@ export const ChatMessage = ({
             </div>
           )}
 
-          {/* Mensaje de cierre (Markdown) */}
-          {closing && (
-            <ReactMarkdown
-              className="prose prose-lg dark:prose-invert max-w-none mb-4"
-              remarkPlugins={[remarkGfm]}
-              components={{
-                a: ({ node, ...props }) => (
-                  <a {...props} target="_blank" rel="noopener noreferrer" />
-                ),
-              }}
-            >
-              {closing}
-            </ReactMarkdown>
+          {/* Mensaje de cierre (HTML seguro) */}
+          {cleanClosing && (
+            <div className="prose prose-lg dark:prose-invert max-w-none mb-4">
+              {parse(withAnchorAttrs(cleanClosing))}
+            </div>
           )}
 
           {/* Hora */}
