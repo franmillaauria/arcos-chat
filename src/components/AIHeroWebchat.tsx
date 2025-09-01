@@ -149,4 +149,29 @@ const AIHeroWebchat = () => {
           </h1>
         </div>
 
-        {/* Mobile Chip*
+        {/* Mobile Chip Rows */}
+        <div className="md:hidden bg-white rounded-2xl overflow-hidden mb-8">
+          <div className="space-y-4 py-8">
+            <ChipRow chips={chipData[0]} direction="right" speed="60s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[1]} direction="left"  speed="70s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[2]} direction="right" speed="80s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[3]} direction="left"  speed="65s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[4]} direction="right" speed="75s" onChipClick={handleChipClick} />
+            <ChipRow chips={chipData[5]} direction="left"  speed="85s" onChipClick={handleChipClick} />
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Chip Rows */}
+      <div className="hidden md:block bg-white">
+        <div className="space-y-6 overflow-hidden py-12">
+          <ChipRow chips={chipData[0]} direction="right" speed="60s" onChipClick={handleChipClick} />
+          <ChipRow chips={chipData[1]} direction="left"  speed="70s" onChipClick={handleChipClick} />
+          <ChipRow chips={chipData[2]} direction="right" speed="80s" onChipClick={handleChipClick} />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default AIHeroWebchat;
