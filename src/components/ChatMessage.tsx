@@ -46,7 +46,6 @@ export const ChatMessage = ({
           <ReactMarkdown
             className="prose prose-lg dark:prose-invert max-w-none mb-4"
             remarkPlugins={[remarkGfm]}
-            // Abrir enlaces en nueva pestaña
             components={{
               a: ({ node, ...props }) => (
                 <a {...props} target="_blank" rel="noopener noreferrer" />
