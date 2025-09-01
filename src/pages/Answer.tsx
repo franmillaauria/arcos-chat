@@ -27,6 +27,26 @@ interface ChatMessageData {
   timestamp: Date;
 }
 
+// === Helpers meta ===
+const getSessionId = (): string => {
+  if (typeof window === "undefined") return "sess_server";
+  let id = sessionStorage.getItem("sessionId");
+  if (!id) {
+    const rand =
+      (globalThis.crypto?.randomUUID?.()?.replace(/-/g, "").slice(0, 12)) ||
+      Math.random().toString(36).slice(2, 10);
+    id = "sess_" + rand;
+    sessionStorage.setItem("sessionId", id);
+  }
+  return id;
+};
+
+const getCurrentUrl = (): string | null =>
+  typeof window === "undefined" ? null : window.location.href;
+
+const genRequestId = (): string =>
+  (globalThis.crypto?.randomUUID?.() ?? ("req_" + Math.random().toString(36).slice(2, 12)));
+
 const Answer = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +67,7 @@ const Answer = () => {
       link: "/products/wallet"
     },
     {
-      id: "2", 
+      id: "2",
       title: "Colección de Relojes Artesanales",
       price: "899,99 €",
       image: productWatch,
@@ -56,129 +76,131 @@ const Answer = () => {
     {
       id: "3",
       title: "Cinturón Hecho a Mano",
-      price: "79,99 €", 
+      price: "79,99 €",
       image: productBelt,
       link: "/products/belt"
     },
     {
       id: "4",
       title: "Bolsa de Viaje de Lujo",
-      price: "459,99 €", 
-      image: productBag, 
+      price: "459,99 €",
+      image: productBag,
       link: "/products/bag"
     }
   ];
 
-  // Check if we have data from navigation (from hero page)
+  // Lanzar la llamada SOLO desde /answer (ya no desde la home)
   useEffect(() => {
-    if (location.state?.question) {
-      const { question, response, isLoading: navigationLoading } = location.state;
-      
-      // Add user message immediately
+    const question = location.state?.question as string | undefined;
+    const navigationLoading = !!location.state?.isLoading;
+    const navSessionId = location.state?.sessionId as string | undefined;
+    const navCurrentUrl = location.state?.currentUrl as string | null | undefined;
+
+    if (question) {
+      // Pintamos el mensaje del usuario
       const userMessage: ChatMessageData = {
-        id: '1',
+        id: 'user_' + Date.now().toString(),
         type: 'user',
         message: question,
         timestamp: new Date()
       };
-      
       setMessages([userMessage]);
-      
-      // If we have a response already, add it
-      if (response) {
-        const assistantMessage: ChatMessageData = {
-          id: '2',
-          type: 'assistant',
-          message: response.answer || response.response || response.text || "No se recibió respuesta del asistente.",
-          products: response.products || defaultProducts,
-          closing: response.closing,
-          timestamp: new Date()
-        };
-        setMessages([userMessage, assistantMessage]);
-      } else if (navigationLoading) {
-        // Start loading and make API call
+
+      // Si la home indicó isLoading=true, hacemos la llamada aquí
+      if (navigationLoading) {
         setIsLoading(true);
-        handleApiCall(question);
+        handleApiCall(question, {
+          sessionId: navSessionId ?? getSessionId(),
+          currentUrl: navCurrentUrl ?? getCurrentUrl(),
+        });
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  const handleApiCall = async (question: string) => {
+  // 🔁 ÚNICA función que llama al webhook — cuerpo estructurado
+  const handleApiCall = async (
+    question: string,
+    meta?: { sessionId?: string | null; currentUrl?: string | null }
+  ) => {
     try {
-      console.log("Making request to:", N8N_WEBHOOK_URL);
-      
-      const requestBody = {
-        text: question
-      };
-      
+      const sessionId = meta?.sessionId ?? getSessionId();
+      const currentUrl = meta?.currentUrl ?? getCurrentUrl();
+      const requestId = genRequestId();
+
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "X-Request-Id": requestId,
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify({
+          requestId,             // ✅ nuevo
+          question,              // ✅ en vez de { text: question }
+          sessionId,             // ✅ nuevo
+          currentUrl,            // ✅ nuevo
+          source: "web_chat",    // ✅ nuevo
+          ts: new Date().toISOString(), // ✅ nuevo
+        }),
       });
 
-      if (response.ok) {
-        const responseText = await response.text();
-        
-        if (!responseText.trim()) {
-          throw new Error("El webhook no devolvió respuesta");
-        }
-        
-        let result;
-        try {
-          result = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error("JSON parse error:", parseError);
-          throw new Error("Respuesta inválida del servidor");
-        }
-        
-        // Handle the structure {output: {response: "...", products: []}}
-        let output;
-        if (result.output) {
-          output = result.output;
-        } else if (Array.isArray(result) && result[0]?.output) {
-          output = result[0].output;
-        } else {
-          output = result;
-        }
-        
-        if (!output) {
-          throw new Error("Respuesta inválida del servidor - no se encontró output");
-        }
-        
-        // Transform products to match internal format
-        const transformedProducts = output.products?.map((product: any, index: number) => ({
+      if (!response.ok) {
+        throw new Error(`Error del servidor: ${response.status}`);
+      }
+
+      const responseText = await response.text();
+      if (!responseText.trim()) {
+        throw new Error("El webhook no devolvió respuesta");
+      }
+
+      let result: any;
+      try {
+        result = JSON.parse(responseText);
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        throw new Error("Respuesta inválida del servidor");
+      }
+
+      // Normaliza {output: {...}} o array con output
+      let output: any;
+      if (result?.output) {
+        output = result.output;
+      } else if (Array.isArray(result) && result[0]?.output) {
+        output = result[0].output;
+      } else {
+        output = result;
+      }
+
+      if (!output) {
+        throw new Error("Respuesta inválida del servidor - no se encontró output");
+      }
+
+      // Transform products to match internal format
+      const transformedProducts: Product[] =
+        output.products?.map((product: any, index: number) => ({
           id: `${index + 1}`,
           title: product.name,
           price: `${product.price} €`,
           image: product.image,
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
-          brand: product.serie || "Arcos"
         })) || [];
-        
-        // Add assistant response to chat
-        const assistantMessage: ChatMessageData = {
-          id: Date.now().toString() + '_response',
-          type: 'assistant',
-          message: output.response || `Respuesta a: "${question}"`,
-          products: transformedProducts.length > 0 ? transformedProducts : undefined,
-          closing: output.closing,
-          timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, assistantMessage]);
-        
-      } else {
-        throw new Error(`Error del servidor: ${response.status}`);
-      }
+
+      // Add assistant response to chat
+      const assistantMessage: ChatMessageData = {
+        id: Date.now().toString() + '_response',
+        type: 'assistant',
+        message: output.response || output.answer || output.text || `Respuesta a: "${question}"`,
+        products: transformedProducts.length > 0 ? transformedProducts : undefined,
+        closing: output.closing,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (err: any) {
       console.error("Error calling n8n webhook:", err);
-      
+
       let errorMessage = "No se pudo conectar con el asistente.";
-      
       if (err.name === 'AbortError') {
         errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
       } else if (err.message?.includes('Failed to fetch')) {
@@ -188,7 +210,7 @@ const Answer = () => {
       } else {
         errorMessage = err.message || "Error desconocido al conectar con el asistente.";
       }
-      
+
       setError(errorMessage);
       toast({
         title: "Error de conexión",
@@ -201,26 +223,33 @@ const Answer = () => {
   };
 
   const handleSend = async () => {
-    if (!inputValue.trim()) return;
-    
+    if (!inputValue.trim() || isLoading) return;
+
     const userMessage = inputValue.trim();
-    
-    // Add user message to chat
+
+    // Pintamos el mensaje del usuario
     const userChatMessage: ChatMessageData = {
       id: Date.now().toString(),
       type: 'user',
       message: userMessage,
       timestamp: new Date()
     };
-    
+
     setMessages(prev => [...prev, userChatMessage]);
     setInputValue("");
-    setIsLoading(true); // Start loading immediately
+    setIsLoading(true);
     setError(null);
-    
-    // Call the API
-    await handleApiCall(userMessage);
+
+    // Llamada con body estructurado para mensajes posteriores también
+    const navSessionId = location.state?.sessionId as string | undefined;
+    const navCurrentUrl = location.state?.currentUrl as string | null | undefined;
+
+    await handleApiCall(userMessage, {
+      sessionId: navSessionId ?? getSessionId(),
+      currentUrl: navCurrentUrl ?? getCurrentUrl(),
+    });
   };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
