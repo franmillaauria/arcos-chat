@@ -5,10 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ChatHistory } from "@/components/ChatHistory";
 import { useToast } from "@/hooks/use-toast";
-import productWallet from "@/assets/product-wallet.jpg";
-import productWatch from "@/assets/product-watch.jpg";
-import productBelt from "@/assets/product-belt.jpg";
-import productBag from "@/assets/product-bag.jpg";
 
 interface Product {
   id: string;
@@ -57,15 +53,7 @@ const Answer = () => {
 
   const N8N_WEBHOOK_URL = "https://n8n.asistentesinnova.com/webhook/21fefe19-021f-42fe-b6f6-a5a04043fd69";
 
-  // Default products to show
-  const defaultProducts = [
-    { id: "1", title: "Cartera de Cuero Premium", price: "129,99 €", image: productWallet, link: "/products/wallet" },
-    { id: "2", title: "Colección de Relojes Artesanales", price: "899,99 €", image: productWatch, link: "/products/watch" },
-    { id: "3", title: "Cinturón Hecho a Mano", price: "79,99 €", image: productBelt, link: "/products/belt" },
-    { id: "4", title: "Bolsa de Viaje de Lujo", price: "459,99 €", image: productBag, link: "/products/bag" }
-  ];
-
-  // Lanzar la llamada SOLO desde /answer
+  // Lanzar la llamada SOLO desde /answer (ya no desde la home)
   useEffect(() => {
     const question = location.state?.question as string | undefined;
     const navigationLoading = !!location.state?.isLoading;
@@ -73,7 +61,7 @@ const Answer = () => {
     const navCurrentUrl = location.state?.currentUrl as string | null | undefined;
 
     if (question) {
-      // Mensaje del usuario
+      // Pintamos el mensaje del usuario
       const userMessage: ChatMessageData = {
         id: 'user_' + Date.now().toString(),
         type: 'user',
@@ -82,6 +70,7 @@ const Answer = () => {
       };
       setMessages([userMessage]);
 
+      // Si la home indicó isLoading=true, hacemos la llamada aquí
       if (navigationLoading) {
         setIsLoading(true);
         handleApiCall(question, {
@@ -93,7 +82,7 @@ const Answer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state]);
 
-  // ÚNICA función que llama al webhook — body estructurado
+  // ÚNICA función que llama al webhook — cuerpo estructurado
   const handleApiCall = async (
     question: string,
     meta?: { sessionId?: string | null; currentUrl?: string | null }
@@ -112,9 +101,6 @@ const Answer = () => {
         ts: new Date().toISOString(),
       };
 
-      // Debug opcional:
-      // console.log("Webhook body →", body);
-
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
         headers: {
@@ -125,10 +111,14 @@ const Answer = () => {
         body: JSON.stringify(body),
       });
 
-      if (!response.ok) throw new Error(`Error del servidor: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`Error del servidor: ${response.status}`);
+      }
 
       const responseText = await response.text();
-      if (!responseText.trim()) throw new Error("El webhook no devolvió respuesta");
+      if (!responseText.trim()) {
+        throw new Error("El webhook no devolvió respuesta");
+      }
 
       let result: any;
       try {
@@ -140,13 +130,19 @@ const Answer = () => {
 
       // Normaliza {output: {...}} o array con output
       let output: any;
-      if (result?.output) output = result.output;
-      else if (Array.isArray(result) && result[0]?.output) output = result[0].output;
-      else output = result;
+      if (result?.output) {
+        output = result.output;
+      } else if (Array.isArray(result) && result[0]?.output) {
+        output = result[0].output;
+      } else {
+        output = result;
+      }
 
-      if (!output) throw new Error("Respuesta inválida del servidor - no se encontró output");
+      if (!output) {
+        throw new Error("Respuesta inválida del servidor - no se encontró output");
+      }
 
-      // Transform products
+      // Transform products a formato interno (solo si el webhook devuelve)
       const transformedProducts: Product[] =
         output.products?.map((product: any, index: number) => ({
           id: `${index + 1}`,
@@ -156,11 +152,12 @@ const Answer = () => {
           link: product.link || `/products/${product.name?.toLowerCase().replace(/\s+/g, '-')}`,
         })) || [];
 
+      // Mensaje del asistente
       const assistantMessage: ChatMessageData = {
         id: Date.now().toString() + '_response',
         type: 'assistant',
         message: output.response || output.answer || output.text || `Respuesta a: "${question}"`,
-        products: transformedProducts.length > 0 ? transformedProducts : defaultProducts,
+        products: transformedProducts.length > 0 ? transformedProducts : undefined, // <- solo si hay
         closing: output.closing,
         timestamp: new Date()
       };
@@ -168,14 +165,24 @@ const Answer = () => {
       setMessages(prev => [...prev, assistantMessage]);
     } catch (err: any) {
       console.error("Error calling n8n webhook:", err);
+
       let errorMessage = "No se pudo conectar con el asistente.";
-      if (err.name === 'AbortError') errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
-      else if (err.message?.includes('Failed to fetch')) errorMessage = "Error de conexión. Verifica tu conexión a internet.";
-      else if (err.message?.includes('webhook')) errorMessage = "El asistente no está disponible temporalmente.";
-      else errorMessage = err.message || "Error desconocido al conectar con el asistente.";
+      if (err.name === 'AbortError') {
+        errorMessage = "El asistente tardó demasiado en responder. Inténtalo de nuevo.";
+      } else if (err.message?.includes('Failed to fetch')) {
+        errorMessage = "Error de conexión. Verifica tu conexión a internet.";
+      } else if (err.message?.includes('webhook')) {
+        errorMessage = "El asistente no está disponible temporalmente.";
+      } else {
+        errorMessage = err.message || "Error desconocido al conectar con el asistente.";
+      }
 
       setError(errorMessage);
-      toast({ title: "Error de conexión", description: errorMessage, variant: "destructive" });
+      toast({
+        title: "Error de conexión",
+        description: errorMessage,
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -199,7 +206,7 @@ const Answer = () => {
     setIsLoading(true);
     setError(null);
 
-    // Llamada con body estructurado para mensajes posteriores
+    // Llamada con body estructurado para mensajes posteriores también
     const navSessionId = location.state?.sessionId as string | undefined;
     const navCurrentUrl = location.state?.currentUrl as string | null | undefined;
 
@@ -229,10 +236,15 @@ const Answer = () => {
           )}
 
           {/* Chat History */}
-          <div className="mb-12" role="main" aria-live="polite" aria-label="Chat Conversation">
+          <div 
+            className="mb-12"
+            role="main"
+            aria-live="polite"
+            aria-label="Chat Conversation"
+          >
             {messages.length === 0 && !isLoading ? (
               <div className="text-center text-muted-foreground py-12">
-                <p>¡Hola! Pregúntame lo que quieras sobre nuestros productos.</p>
+                <p>¡Hola! Pregúntame lo que quieras sobre nuestros productos!</p>
               </div>
             ) : (
               <ChatHistory messages={messages} isLoading={isLoading} />
