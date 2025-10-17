@@ -7,7 +7,7 @@
     <meta name="description" content="Ask our AI assistant anything about our products and services" />
     <meta name="author" content="Lovable" />
 
-    <!-- clave para GitHub Pages del repo /arcos-chat/ -->
+    <!-- Necesario para rutas en GitHub Pages bajo /arcos-chat/ -->
     <base href="/arcos-chat/">
 
     <!-- Fonts -->
@@ -20,26 +20,25 @@
     <meta property="og:description" content="Lovable Generated Project" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
-    <!-- Calcula y expone window.currentUrl antes de cargar main.tsx -->
+    <!-- Calcula y expone window.currentUrl (la URL del contenedor) -->
     <script>
       (function () {
         try {
           const qs = new URLSearchParams(location.search);
           let currentUrl = null;
 
-          // 1) Preferencia: ?origin=<url codificada> (lo envía el iframe)
+          // 1) Preferencia: ?origin=<url codificada> (la envía el iframe)
           const originParam = qs.get("origin");
           if (originParam) {
             try { currentUrl = decodeURIComponent(originParam); }
             catch { currentUrl = originParam; }
           }
 
-          // 2) Respaldo: window.name (si el iframe lo guardó)
+          // 2) Respaldo: window.name (persistente entre redirecciones)
           if (!currentUrl) {
             const m = /^parentHref=(.*)$/.exec(window.name || "");
             if (m) {
@@ -53,22 +52,42 @@
             currentUrl = document.referrer || null;
           }
 
+          // Exporta para que la app lo use (en vez de window.location.href)
           window.currentUrl = currentUrl;
           try { window.parentOrigin = currentUrl ? new URL(currentUrl).origin : null; } catch {}
 
-          console.log("currentUrl:", window.currentUrl);
+          // (Opcional) Verificación
+          console.log("currentUrl (computed):", window.currentUrl);
+          console.log("iframe href (debug):", window.location.href);
         } catch (e) {
           window.currentUrl = null;
           window.parentOrigin = null;
           console.warn("No se pudo calcular currentUrl:", e);
         }
+
+        // 🛠️ Workaround útil si no puedes tocar el código de la app:
+        // intercepta fetch para añadir parentUrl al body de las peticiones JSON.
+        const _fetch = window.fetch;
+        window.fetch = function(input, init) {
+          try {
+            if (init && init.method && init.method.toUpperCase() === 'POST' && init.headers) {
+              const ct = (init.headers['Content-Type'] || init.headers['content-type'] || '').toString();
+              if (ct.includes('application/json') && typeof init.body === 'string') {
+                const body = JSON.parse(init.body || '{}');
+                if (!body.parentUrl) body.parentUrl = window.currentUrl || null;
+                init.body = JSON.stringify(body);
+              }
+            }
+          } catch(e) { /* no-op */ }
+          return _fetch.apply(this, arguments);
+        };
       })();
     </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <!-- IMPORTANTE: ruta relativa, sin barra inicial -->
+    <!-- IMPORTANTE: ruta relativa (sin barra inicial). Si usas bundle, apunta a assets/*.js -->
     <script type="module" src="src/main.tsx"></script>
   </body>
 </html>
