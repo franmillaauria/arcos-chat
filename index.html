@@ -6,7 +6,10 @@
     <title>AI Assistant - Ask About Our Products</title>
     <meta name="description" content="Ask our AI assistant anything about our products and services" />
     <meta name="author" content="Lovable" />
-    
+
+    <!-- clave para GitHub Pages del repo /arcos-chat/ -->
+    <base href="/arcos-chat/">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,7 +56,6 @@
           window.currentUrl = currentUrl;
           try { window.parentOrigin = currentUrl ? new URL(currentUrl).origin : null; } catch {}
 
-          // (Opcional) Verificación en consola
           console.log("currentUrl:", window.currentUrl);
         } catch (e) {
           window.currentUrl = null;
@@ -66,6 +68,7 @@
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- IMPORTANTE: ruta relativa, sin barra inicial -->
+    <script type="module" src="src/main.tsx"></script>
   </body>
 </html>
