@@ -24,21 +24,22 @@
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
-    <!-- Calcula y expone window.currentUrl (la URL del contenedor) -->
+    <!-- Calcula y expone window.currentUrl; limpia ?origin=...; inyecta parentUrl en POST JSON -->
     <script>
       (function () {
         try {
+          // --- 1) Calcula la URL del contenedor (parent) ---
           const qs = new URLSearchParams(location.search);
           let currentUrl = null;
 
-          // 1) Preferencia: ?origin=<url codificada> (la envía el iframe)
+          // Preferencia: ?origin=<url codificada> (la envía el iframe)
           const originParam = qs.get("origin");
           if (originParam) {
             try { currentUrl = decodeURIComponent(originParam); }
             catch { currentUrl = originParam; }
           }
 
-          // 2) Respaldo: window.name (persistente entre redirecciones)
+          // Respaldo: window.name (si el iframe lo guardó)
           if (!currentUrl) {
             const m = /^parentHref=(.*)$/.exec(window.name || "");
             if (m) {
@@ -47,47 +48,70 @@
             }
           }
 
-          // 3) Último recurso: document.referrer
+          // Último recurso: document.referrer
           if (!currentUrl) {
             currentUrl = document.referrer || null;
           }
 
-          // Exporta para que la app lo use (en vez de window.location.href)
+          // Exporta global
           window.currentUrl = currentUrl;
-          try { window.parentOrigin = currentUrl ? new URL(currentUrl).origin : null; } catch {}
+          try { window.parentOrigin = currentUrl ? new URL(currentUrl).origin : null; } catch { window.parentOrigin = null; }
 
-          // (Opcional) Verificación
-          console.log("currentUrl (computed):", window.currentUrl);
-          console.log("iframe href (debug):", window.location.href);
+          // --- 2) Limpia la barra para ocultar ?origin=... ---
+          try {
+            const clean = location.pathname + location.hash;
+            history.replaceState(null, "", clean);
+          } catch (e) {}
+
+          // --- 3) Inyección automática de parentUrl en POST JSON (útil para tu webhook n8n) ---
+          const _fetch = window.fetch;
+          window.fetch = function (input, init) {
+            try {
+              // Detecta método aunque "input" sea un Request
+              const method =
+                (init && init.method) ||
+                (input && typeof input === "object" && input.method) ||
+                "GET";
+
+              if (String(method).toUpperCase() === "POST") {
+                // Normaliza init y cabeceras
+                init = init || {};
+                let ct = "";
+                if (init.headers) {
+                  try { ct = new Headers(init.headers).get("content-type") || ""; } catch {}
+                }
+                // Si es JSON, añade parentUrl al body
+                if (ct.toLowerCase().includes("application/json") && typeof init.body === "string") {
+                  try {
+                    const body = JSON.parse(init.body || "{}");
+                    if (!("parentUrl" in body)) body.parentUrl = window.currentUrl || null;
+                    init.body = JSON.stringify(body);
+                  } catch (e) {
+                    // si no es JSON válido, lo dejamos tal cual
+                  }
+                }
+              }
+            } catch (e) { /* no-op */ }
+            return _fetch.apply(this, arguments);
+          };
+
+          // Helper opcional
+          window.getParentUrl = function () { return window.currentUrl; };
+
+          // Debug opcional
+          console.log("currentUrl:", window.currentUrl);
         } catch (e) {
           window.currentUrl = null;
           window.parentOrigin = null;
           console.warn("No se pudo calcular currentUrl:", e);
         }
-
-        // 🛠️ Workaround útil si no puedes tocar el código de la app:
-        // intercepta fetch para añadir parentUrl al body de las peticiones JSON.
-        const _fetch = window.fetch;
-        window.fetch = function(input, init) {
-          try {
-            if (init && init.method && init.method.toUpperCase() === 'POST' && init.headers) {
-              const ct = (init.headers['Content-Type'] || init.headers['content-type'] || '').toString();
-              if (ct.includes('application/json') && typeof init.body === 'string') {
-                const body = JSON.parse(init.body || '{}');
-                if (!body.parentUrl) body.parentUrl = window.currentUrl || null;
-                init.body = JSON.stringify(body);
-              }
-            }
-          } catch(e) { /* no-op */ }
-          return _fetch.apply(this, arguments);
-        };
       })();
     </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <!-- IMPORTANTE: ruta relativa (sin barra inicial). Si usas bundle, apunta a assets/*.js -->
+    <!-- IMPORTANTE: ruta relativa (sin barra inicial). Si usas bundle de build, cámbialo por assets/*.js -->
     <script type="module" src="src/main.tsx"></script>
   </body>
 </html>
